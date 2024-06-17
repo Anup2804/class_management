@@ -4,6 +4,7 @@
   "description": "This is the backend of classes management application made using flutter and nodejs",
   "main": "index.js",
   "scripts": {
+    "start":"nodemon ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "anup chaurasia",
