@@ -1,6 +1,6 @@
 // This file is for standard erorr display.
 
-class ApiError extends Error {
+class apiError extends Error {
     constructor (
         statusCode,
         message ="something went worng",
@@ -23,4 +23,4 @@ class ApiError extends Error {
 }
 
 
-export {ApiError}
+export {apiError}
