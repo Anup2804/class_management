@@ -23,7 +23,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     throw new apiError(402, "email or password are required.");
   }
 
-  if (!fullName && !standard && !schoolName && !phoneNo) {
+  if (!fullName && !standard && !schoolName && !phoneNo && !subjectChosen) {
     throw new apiError(402, "all fields with star mark are required.");
   }
 
@@ -45,13 +45,15 @@ const studentRegister = asyncHandler(async (req, res) => {
     subjectChosen:subjects,
   });
 
-  const student = await students.findOne(newStudent._id).select(
-    "-password -refreshtoken"
-  )
+  const student = await students
+    .findOne(newStudent._id)
+    .select("-password -refreshtoken");
 
-  return res
-    .status(200)
-    .json(new apiResponse(200, student, "user created."));
+  if (!student) {
+    throw new apiError(500, "unable to register student.");
+  }
+
+  return res.status(200).json(new apiResponse(200, student, "user created."));
 });
 
 export { studentRegister };

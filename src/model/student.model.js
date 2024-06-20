@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { apiError } from "../utils/apiError.js";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ const studentSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      trim: true,
       validate: {
         validator: (val) => {
           const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -31,12 +33,16 @@ const studentSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      validator: (val) => {
-        const re = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-        return val.match(re);
+      trim: true,
+      validate: {
+        validator: (val) => {
+          const re =
+            /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+          return val.match(re);
+        },
+        message:
+          "password should contain one small letter, big letter,one number,on special character",
       },
-      message: "password should contain one small letter, big letter,one number,on special character",
-    
     },
     standard: {
       type: String,
@@ -48,7 +54,7 @@ const studentSchema = new mongoose.Schema(
     },
     subjectChosen: {
       type: [String],
-      default: [],
+      required:true
     },
     address: {
       type: String,
@@ -57,8 +63,16 @@ const studentSchema = new mongoose.Schema(
     phoneNo: {
       type: String,
       required: true,
+      validate: {
+        validator: (val) => {
+          const re = /^\d{10}$/;
+          return val.match(re);
+        },
+        message: "phone number should be of 10 digit.",
+      },
     },
-  },{timestamps: true,}
+  },
+  { timestamps: true }
 );
 
 studentSchema.pre("save", async function (next) {
@@ -78,7 +92,7 @@ studentSchema.methods.generateAccessToken = function () {
       _id: this._id,
       fullName: this.fullName,
       email: this.email,
-      class:this.class
+      class: this.class,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
