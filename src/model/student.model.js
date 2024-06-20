@@ -20,12 +20,25 @@ const studentSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      validate: {
+        validator: (val) => {
+          const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return val.match(re);
+        },
+        message: "email not valid",
+      },
     },
-    passwrod: {
+    password: {
       type: String,
       required: true,
+      validator: (val) => {
+        const re = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+        return val.match(re);
+      },
+      message: "password should contain one small letter, big letter,one number,on special character",
+    
     },
-    class: {
+    standard: {
       type: String,
       required: true,
     },
@@ -34,12 +47,12 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
     subjectChosen: {
-      type: [subjectChosen],
-      default: "all",
+      type: [String],
+      default: [],
     },
     address: {
       type: String,
-      required: true,
+      // required: true,
     },
     phoneNo: {
       type: String,
@@ -49,9 +62,9 @@ const studentSchema = new mongoose.Schema(
 );
 
 studentSchema.pre("save", async function (next) {
-  if (!this.isModified("passwrod")) return next();
+  if (!this.isModified("password")) return next();
 
-  this.passwrod = await bcrypt.hash(this.passwrod, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
