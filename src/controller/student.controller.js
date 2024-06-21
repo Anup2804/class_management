@@ -4,6 +4,22 @@ import { apiError } from "../utils/apiError.js";
 import { students } from "../model/student.model.js";
 import { apiResponse } from "../utils/apiResponse.js";
 
+const generateAccessTokenAndRefreshToken = async (userId) => {
+  // This function generates the access token for user after login.
+  try {
+    const student = await students.findById(userId);
+    const generateAccessToken = student.generateAccessToken();
+    const generateRefreshToken = student.generateRefreshToken();
+
+    student.refreshtoken = generateRefreshToken;
+    await student.save({ validateBeforeSave: false });
+
+    return { generateAccessToken, generateRefreshToken };
+  } catch (err) {
+    throw new apiError(500, "something went worng");
+  }
+};
+
 const studentRegister = asyncHandler(async (req, res) => {
   // take the inputs from user.
   // validate the user input.
@@ -42,7 +58,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     standard,
     schoolName,
     phoneNo,
-    subjectChosen:subjects,
+    subjectChosen: subjects,
   });
 
   const student = await students
@@ -56,4 +72,48 @@ const studentRegister = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, student, "user created."));
 });
 
-export { studentRegister };
+const studentLogin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email && !password) {
+    throw new apiError(402, "email or password is required.");
+  }
+
+  const getStudent = await students.findOne({ email });
+
+  if (!getStudent) {
+    throw new apiError(402, "user with email does not exist.");
+  }
+
+  const passwordValid = await getStudent.isPasswordCorrect(password);
+
+  if (!passwordValid) {
+    throw new apiError(404, "password is invaild.");
+  }
+
+  const { generateAccessToken, generateRefreshToken } =
+    await generateAccessTokenAndRefreshToken(getStudent._id);
+
+  const loggedInStudent = await students.findById(getStudent._id).select(
+    "-password -refreshtoken"
+  );
+
+  const option = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", generateAccessToken, option)
+    .cookie("refreshtoken", generateRefreshToken, option)
+    .json(
+      new apiResponse(
+        200,
+        {  sutdentDetails:loggedInStudent, generateAccessToken, generateRefreshToken },
+        "user login successful."
+      )
+    );
+});
+
+export { studentRegister, studentLogin };

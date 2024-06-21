@@ -5,6 +5,21 @@ import { apiResponse } from "../utils/apiResponse.js";
 import { teachers } from "../model/teacher.model.js";
 import { students } from "../model/student.model.js";
 
+const generateAccessTokenAndRefreshToken = async (userId) => {
+  try {
+    const teacher = await teachers.findById(userId);
+    const generateAccessToken = teacher.generateAccessToken();
+    const generateRefreshToken = teacher.generateRefreshToken();
+
+    teacher.refreshToken = generateRefreshToken;
+    await teacher.save({ validateBeforeSave: false });
+
+    return { generateAccessToken, generateRefreshToken };
+  } catch (err) {
+    throw new apiError(500, "something went worng");
+  }
+};
+
 const teacherRegister = asyncHandler(async (req, res) => {
   const { fullName, qulification, email, password, hiredForSubject } = req.body;
 
@@ -24,14 +39,13 @@ const teacherRegister = asyncHandler(async (req, res) => {
     throw new apiError(402, "you are not the teacher.");
   }
 
-//   const hiredSubject = JSON.parse(req.body.hiredForSubject);
+  //   const hiredSubject = JSON.parse(req.body.hiredForSubject);
 
   const teacher = await teachers.create({
     fullName,
     email,
     password,
     qulification: qulification,
-    
   });
 
   const newTeacher = await teachers
@@ -43,4 +57,33 @@ const teacherRegister = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, newTeacher, "teacher created successfully "));
 });
 
-export {teacherRegister}
+const teacherLogin = asyncHandler(async (req, res) => {
+  const { email, fullName, password } = req.body;
+
+  if (!email && !password && !fullName) {
+    throw new apiError(402, "email,password and fullName is required");
+  }
+
+  const getTeacher = await teachers.findOne({
+    $and: [{ email }, { fullName }],
+  });
+
+  if (!getTeacher) {
+    throw new apiError(500, "user with this email does not exist.");
+  }
+
+  const passwordValid = await getTeacher.isPasswordCorrect(password);
+
+  if (!passwordValid) {
+    throw new apiError(500, "password is invalid");
+  }
+
+  const { generateAccessToken, generateRefreshToken } =
+    await generateAccessTokenAndRefreshToken(getTeacher._id);
+
+  const loggedInTeacher = await teachers.findById(getTeacher._id).select(
+    "-password -generateRefreshToken"
+  )
+});
+
+export { teacherRegister,teacherLogin };

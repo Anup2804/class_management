@@ -11,6 +11,7 @@ const teacherSchema = new mongoose.Schema(
     fullName: {
       type: String,
       required: true,
+      trim:true
     },
     qualification: {
       type: String,
