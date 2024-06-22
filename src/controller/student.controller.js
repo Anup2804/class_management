@@ -11,7 +11,7 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
     const generateAccessToken = student.generateAccessToken();
     const generateRefreshToken = student.generateRefreshToken();
 
-    student.refreshtoken = generateRefreshToken;
+    student.refreshToken = generateRefreshToken;
     await student.save({ validateBeforeSave: false });
 
     return { generateAccessToken, generateRefreshToken };

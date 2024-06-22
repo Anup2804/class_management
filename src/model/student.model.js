@@ -71,6 +71,9 @@ const studentSchema = new mongoose.Schema(
         message: "phone number should be of 10 digit.",
       },
     },
+    refreshToken: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

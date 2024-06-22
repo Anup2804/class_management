@@ -1,11 +1,12 @@
-import { ApiError } from "../utils/apiError.js";
+import { apiError } from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { User } from "../models/user.model.js";
+import { students } from "../model/student.model.js";
+import { teachers } from "../model/teacher.model.js";
 dotenv.config();
 
-export const verifyjwt = asyncHandler(async (req, _, next) => {
+export const verifyJwtStudent = asyncHandler(async (req, _, next) => {
   try {
     const token =
       req.cookies?.accessToken ||
@@ -13,24 +14,54 @@ export const verifyjwt = asyncHandler(async (req, _, next) => {
     // console.log(token)
 
     if (!token) {
-      throw new ApiError(401, "unauthorized request");
+      throw new apiError(401, "unauthorized request");
     }
     const decodedtoken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     // console.log(decodedtoken)
 
-    const user = await User.findById(decodedtoken?._id).select(
+    const student = await students.findById(decodedtoken?._id).select(
       "-password -refreshtoken"
     );
 
-    if (!user) {
-      throw new ApiError(401, "invaild accesstoken");
+    if (!student) {
+      throw new apiError(401, "invaild accesstoken");
     }
 
-    req.user = user;
+    req.student = student;
     //   console.log(req.user);
     next();
   } catch (error) {
-    throw new ApiError(401, "invalid accesstoken");
+    throw new apiError(401, "invalid accesstoken");
+  }
+});
+
+export const verifyJwtTeacher = asyncHandler(async (req, _, next) => {
+  try {
+    const token =
+      req.cookies?.accessToken ||
+      req.header("Authorization")?.replace("Bearer ", "");
+    // console.log(token)
+
+    if (!token) {
+      throw new apiError(401, "unauthorized request");
+    }
+    const decodedtoken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    // console.log(decodedtoken)
+
+    const teacher = await teachers.findById(decodedtoken?._id).select(
+      "-password -refreshtoken"
+    );
+
+    if (!teacher) {
+      throw new apiError(401, "invaild accesstoken");
+    }
+
+    req.teacher = teacher;
+    //   console.log(req.user);
+    next();
+  } catch (error) {
+    throw new apiError(401, "invalid accesstoken");
   }
 });

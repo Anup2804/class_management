@@ -5,44 +5,48 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-
 const teacherSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
       required: true,
-      trim:true
+      trim: true,
     },
     qualification: {
       type: String,
     },
     email: {
-        type: String,
-        required: true,
-        trim:true,
-        validate: {
-          validator: (val) => {
-            const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            return val.match(re);
-          },
-          message: "email not valid",
-        },
-      },
-      password: {
-        type: String,
-        required: true,
-        trim:true,
-        validate:{
+      type: String,
+      required: true,
+      trim: true,
+      validate: {
         validator: (val) => {
-          const re = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+          const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
           return val.match(re);
         },
-        message: "password should contain one small letter, big letter,one number,on special character",
-    },
+        message: "email not valid",
       },
+    },
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+      validate: {
+        validator: (val) => {
+          const re =
+            /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+          return val.match(re);
+        },
+        message:
+          "password should contain one small letter, big letter,one number,on special character",
+      },
+    },
     hiredForSubject: {
       type: [String],
       default: ["All"],
+    },
+    refreshToken: {
+      type: String,
     },
   },
   { timestamps: true }

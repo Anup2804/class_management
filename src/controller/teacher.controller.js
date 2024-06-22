@@ -84,6 +84,23 @@ const teacherLogin = asyncHandler(async (req, res) => {
   const loggedInTeacher = await teachers.findById(getTeacher._id).select(
     "-password -generateRefreshToken"
   )
+
+  const option = {
+    httpOnly:true,
+    secure:true
+  }
+
+  return res
+    .status(200)
+    .cookie("accessToken", generateAccessToken, option)
+    .cookie("refreshtoken", generateRefreshToken, option)
+    .json(
+      new apiResponse(
+        200,
+        {  teacherDetails:loggedInTeacher, generateAccessToken, generateRefreshToken },
+        "user login successful."
+      )
+    );
 });
 
 export { teacherRegister,teacherLogin };
