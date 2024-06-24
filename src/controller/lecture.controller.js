@@ -6,14 +6,14 @@ import { teachers } from "../model/teacher.model.js";
 import { lectureNotices } from "../model/lecture.model.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
-  const { teacherId } = req.params;
+//   const { teacherId } = req.params;
   const { standard, lectureName } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(teacherId)) {
+  if (!mongoose.Types.ObjectId.isValid(req.teacher._id)) {
     throw new apiError(400, "teacher ID is incorrect");
   }
 
-  const getTeacher = await teachers.findById(teacherId);
+  const getTeacher = await teachers.findById(req.teacher._id);
 
   if (!getTeacher) {
     throw new apiError(402, "teacher with given id not found.");
@@ -24,7 +24,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
   }
 
   const lecture = await lectureNotices.create({
-    byTeacher: teacherId,
+    byTeacher: req.teacher._id,
     standard,
     lectureName,
   });
@@ -35,11 +35,11 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     throw new apiError(500, "unable to create a lecture notice.");
   }
 
-  console.log(getlecture);
+  // console.log(getlecture);
 
   const lectureData = await lectureNotices.aggregate([
     {
-      $match: { _id: new mongoose.Types.ObjectId(lecture._id) },
+      $match: { _id: lecture._id },
     },
     {
       $lookup: {
@@ -64,18 +64,18 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     },
   ]);
 
-  //   console.log(lectureData)
+    // console.log(lectureData)
 
-  //   if(!lectureData.length){
-  //     throw new apiError(500,'lecture created but lectureData not created')
-  //   }
+    if(!lectureData.length){
+      throw new apiError(500,'lecture created but lectureData not created')
+    }
 
   return res
     .status(200)
     .json(
       new apiResponse(
         200,
-        lectureData[0],
+        lectureData,
         "lecture notice is created successfully"
       )
     );

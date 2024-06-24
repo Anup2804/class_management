@@ -4,7 +4,8 @@ import mongoose,{Schema} from "mongoose";
 const lectureSchema = new mongoose.Schema(
     {
         byTeacher:{
-            type:String,
+            type:Schema.Types.ObjectId,
+            ref:'teachers',
             required:true
         },
         lectureName:{

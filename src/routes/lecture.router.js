@@ -4,6 +4,6 @@ import { verifyJwtTeacher } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
-router.route("/add-lecture/:teacherId").post(verifyJwtTeacher, addLectureNotice);
+router.route("/add-lecture").post(verifyJwtTeacher, addLectureNotice);
 
 export default router;
