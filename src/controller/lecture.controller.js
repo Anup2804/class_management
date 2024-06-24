@@ -6,7 +6,7 @@ import { teachers } from "../model/teacher.model.js";
 import { lectureNotices } from "../model/lecture.model.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
-//   const { teacherId } = req.params;
+  //   const { teacherId } = req.params;
   const { standard, lectureName } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(req.teacher._id)) {
@@ -50,7 +50,11 @@ const addLectureNotice = asyncHandler(async (req, res) => {
       },
     },
     { $unwind: "$teacherDetails" },
-
+    {
+      $addFields: {
+        teacherName: "$teacherDetails",
+      },
+    },
     {
       $project: {
         _id: 1,
@@ -64,11 +68,11 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     },
   ]);
 
-    // console.log(lectureData)
+  // console.log(lectureData)
 
-    if(!lectureData.length){
-      throw new apiError(500,'lecture created but lectureData not created')
-    }
+  if (!lectureData.length) {
+    throw new apiError(500, "lecture created but lectureData not created");
+  }
 
   return res
     .status(200)

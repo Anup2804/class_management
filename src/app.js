@@ -46,11 +46,13 @@ app.use((err, req, res, next) => {
 
 import studentRouter from "./routes/student.router.js";
 import teacherRouter from "./routes/teacher.routes.js";
-import lectureRouter from "./routes/lecture.router.js"
+import lectureRouter from "./routes/lecture.router.js";
+import testRouter from "./routes/test.router.js";
 // intialisation of router
 
 app.use("/api/v1/student", studentRouter);
 app.use("/api/v1/teacher", teacherRouter);
-app.use("/api/v1/lecture",lectureRouter)
+app.use("/api/v1/teacher/lecture", lectureRouter);
+app.use("/api/v1/teacher/test", testRouter);
 
 export { app };
