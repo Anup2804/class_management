@@ -53,8 +53,8 @@ import notesRouter from "./routes/notes.router.js";
 
 app.use("/api/v1/student", studentRouter);
 app.use("/api/v1/teacher", teacherRouter);
-app.use("/api/v1/teacher/lecture", lectureRouter);
-app.use("/api/v1/teacher/test", testRouter);
-app.use("/api/v1/teacher/notes", notesRouter);
+app.use("/api/v1/lecture", lectureRouter);
+app.use("/api/v1/test", testRouter);
+app.use("/api/v1/notes", notesRouter);
 
 export { app };

@@ -4,6 +4,7 @@ import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { teachers } from "../model/teacher.model.js";
 import { testNotices } from "../model/test.model.js";
+import { students } from "../model/student.model.js";
 
 const uploadTestNotice = asyncHandler(async (req, res) => {
   const { subjectName, standard, chapterNo ,time} = req.body;
@@ -52,7 +53,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
     { $unwind: "$teacherDetails" },
     {
       $addFields: {
-        teacherName: "$teacherDetails",
+        teacherName: "$teacherDetails.fullName",
       },
     },
     {
@@ -85,5 +86,55 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
     );
 });
 
+const getTestNotice = asyncHandler(async(req,res)=>{
+  if (!mongoose.Types.ObjectId.isValid(req.student._id)) {
+    throw new apiError(401, "invalid user");
+  }
 
-export {uploadTestNotice}
+  const findStudent = await students.findById(req.student._id);
+
+  if (!findStudent) {
+    throw new apiError(402, "user does not exist");
+  }
+
+  const test = await testNotices.aggregate([
+    {
+      $match: { standard: findStudent.standard.toString() },
+    },
+    {
+      $lookup: {
+        from: "teachers",
+        localField: "byTeacher",
+        foreignField: "_id",
+        as: "teacherDetails",
+      },
+    },
+    { $unwind: "$teacherDetails" },
+    {
+      $addFields: {
+        teacherName: "$teacherDetails",
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        standard: 1,
+        lectureName: 1,
+        byTeacher: {
+          _id: "$teacherDetails._id",
+          name: "$teacherDetails.fullName",
+        },
+        time: 1,
+      },
+    },
+  ]);
+
+  if (!test.length) {
+    throw new apiError(500, "no lecture found");
+  }
+
+  return res.status(200).json(new apiResponse(200, test, "test found"));
+})
+
+
+export {uploadTestNotice,getTestNotice}
