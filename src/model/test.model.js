@@ -18,6 +18,10 @@ const testNoticeSchema = new mongoose.Schema({
         standard:{
             type:String,
             required:true
+        },
+        time:{
+            type:String,
+            required:true
         }
 },{timestamps:true})
 

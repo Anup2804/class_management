@@ -6,12 +6,12 @@ import { teachers } from "../model/teacher.model.js";
 import { testNotices } from "../model/test.model.js";
 
 const uploadTestNotice = asyncHandler(async (req, res) => {
-  const { subjectName, standard, chapterNo } = req.body;
+  const { subjectName, standard, chapterNo ,time} = req.body;
 
-  if (!subjectName && !standard && !chapterNo) {
+  if (!subjectName && !standard && !chapterNo && !time) {
     throw new apiError(
       402,
-      "subjectName or chapterNo or standard is required."
+      "subjectName or chapterNo or standard or time is required."
     );
   }
 
@@ -30,6 +30,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
     subjectName,
     standard,
     chapterNo,
+    time
   });
 
   if (!test) {
@@ -64,6 +65,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
           _id: "$teacherDetails._id",
           name: "$teacherDetails.fullName",
         },
+        time:1
       },
     },
   ]);
@@ -71,6 +73,10 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
   if (!testData) {
     throw new apiError(500, "testdata is not created.");
   }
+
+  setTimeout(async () => {
+    await lectureNotices.findByIdAndDelete(lecture._id);
+  },  168 * 60 * 60 * 1000);
 
   return res
     .status(200)
