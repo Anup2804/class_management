@@ -103,4 +103,31 @@ const teacherLogin = asyncHandler(async (req, res) => {
     );
 });
 
-export { teacherRegister,teacherLogin };
+const teacherLogout = asyncHandler(async(req,res)=>{
+  req.teacher._id;
+  // console.log(req.user)
+  await teachers.findByIdAndUpdate(
+    req.teacher._id,
+    {
+      $set: {
+        refreshToken: "",
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  const option = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", option)
+    .clearCookie("refreshToken", option)
+    .json(new apiResponse(200, {}, "User logout successful"));
+});
+
+export { teacherRegister,teacherLogin,teacherLogout };

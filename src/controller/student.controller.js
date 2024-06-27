@@ -95,7 +95,7 @@ const studentLogin = asyncHandler(async (req, res) => {
     await generateAccessTokenAndRefreshToken(getStudent._id);
 
   const loggedInStudent = await students.findById(getStudent._id).select(
-    "-password -refreshtoken"
+    "-password -refreshToken"
   );
 
   const option = {
@@ -106,7 +106,7 @@ const studentLogin = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("accessToken", generateAccessToken, option)
-    .cookie("refreshtoken", generateRefreshToken, option)
+    .cookie("refreshToken", generateRefreshToken, option)
     .json(
       new apiResponse(
         200,
@@ -116,4 +116,33 @@ const studentLogin = asyncHandler(async (req, res) => {
     );
 });
 
-export { studentRegister, studentLogin };
+const studentLogout = asyncHandler(async(req,res)=>{
+  req.student._id;
+  // console.log(req.user)
+  await students.findByIdAndUpdate(
+    req.student._id,
+    {
+      $set: {
+        refreshToken: "",
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  const option = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", option)
+    .clearCookie("refreshToken", option)
+    .json(new apiResponse(200, {}, "User logout successful"));
+});
+
+
+
+export { studentRegister, studentLogin ,studentLogout};
