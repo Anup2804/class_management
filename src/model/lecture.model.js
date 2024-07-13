@@ -19,6 +19,10 @@ const lectureSchema = new mongoose.Schema(
         time:{
             type:String,
             required:true
+        },
+        description:{
+            type:String,
+            required:false
         }
     },{timestamps:true}
 )

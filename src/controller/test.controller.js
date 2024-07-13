@@ -7,7 +7,7 @@ import { testNotices } from "../model/test.model.js";
 import { students } from "../model/student.model.js";
 
 const uploadTestNotice = asyncHandler(async (req, res) => {
-  const { subjectName, standard, chapterNo ,time} = req.body;
+  const { subjectName, standard, chapterNo ,time,description} = req.body;
 
   if (!subjectName && !standard && !chapterNo && !time) {
     throw new apiError(
@@ -31,7 +31,8 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
     subjectName,
     standard,
     chapterNo,
-    time
+    time,
+    description
   });
 
   if (!test) {
@@ -66,7 +67,8 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
           _id: "$teacherDetails._id",
           name: "$teacherDetails.fullName",
         },
-        time:1
+        time:1,
+        description:1
       },
     },
   ]);
@@ -125,6 +127,7 @@ const getTestNotice = asyncHandler(async(req,res)=>{
           name: "$teacherDetails.fullName",
         },
         time: 1,
+        description:1
       },
     },
   ]);

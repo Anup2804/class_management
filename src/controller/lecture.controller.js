@@ -8,7 +8,7 @@ import { students } from "../model/student.model.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
   //   const { teacherId } = req.params;
-  const { standard, lectureName, time } = req.body;
+  const { standard, lectureName, time ,description} = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(req.teacher._id)) {
     throw new apiError(400, "teacher ID is incorrect");
@@ -29,6 +29,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     standard,
     lectureName,
     time,
+    description
   });
 
   const getlecture = await lectureNotices.findById(lecture._id);
@@ -67,6 +68,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
           name: "$teacherDetails.fullName",
         },
         time: 1,
+        description:1
       },
     },
   ]);
@@ -131,6 +133,7 @@ const getLecture = asyncHandler(async (req, res) => {
           name: "$teacherDetails.fullName",
         },
         time: 1,
+        description:1
       },
     },
   ]);

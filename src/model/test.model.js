@@ -22,6 +22,9 @@ const testNoticeSchema = new mongoose.Schema({
         time:{
             type:String,
             required:true
+        },
+        description:{
+            type:String,
         }
 },{timestamps:true})
 

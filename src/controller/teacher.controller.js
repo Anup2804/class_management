@@ -21,7 +21,7 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
 };
 
 const teacherRegister = asyncHandler(async (req, res) => {
-  const { fullName, qulification, email, password, hiredForSubject } = req.body;
+  const { fullName, qulification, email, password, hiredForSubject ,hiredForStandard} = req.body;
 
   if (!fullName && !email && !password) {
     throw new apiError(402, "name , email and password are required.");
@@ -46,6 +46,9 @@ const teacherRegister = asyncHandler(async (req, res) => {
     email,
     password,
     qulification: qulification,
+    hiredForSubject,
+    hiredForStandard
+    // hiredForSubject:Array.isArray(hiredForStandard) ? hiredForStandard : [hiredForStandard]
   });
 
   const newTeacher = await teachers

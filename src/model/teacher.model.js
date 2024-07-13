@@ -45,6 +45,9 @@ const teacherSchema = new mongoose.Schema(
       type: [String],
       default: ["All"],
     },
+    hiredForStandard: {
+      type: [String],
+    },
     refreshToken: {
       type: String,
     },
