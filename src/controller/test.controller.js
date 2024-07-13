@@ -121,7 +121,7 @@ const getTestNotice = asyncHandler(async(req,res)=>{
       $project: {
         _id: 1,
         standard: 1,
-        lectureName: 1,
+        subjectName: 1,
         byTeacher: {
           _id: "$teacherDetails._id",
           name: "$teacherDetails.fullName",

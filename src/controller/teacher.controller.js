@@ -46,9 +46,10 @@ const teacherRegister = asyncHandler(async (req, res) => {
     email,
     password,
     qulification: qulification,
-    hiredForSubject,
-    hiredForStandard
-    // hiredForSubject:Array.isArray(hiredForStandard) ? hiredForStandard : [hiredForStandard]
+    hiredForStandard,
+    hiredForSubject
+    // hiredForStandard:Array.isArray(hiredForStandard) ? hiredForStandard: [hiredForStandard],
+    // hiredForSubject:Array.isArray(hiredForSubject) ? hiredForSubject : [hiredForSubject]
   });
 
   const newTeacher = await teachers

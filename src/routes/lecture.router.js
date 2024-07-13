@@ -1,6 +1,7 @@
 import {
   addLectureNotice,
   getLecture,
+  standardLecture,
 } from "../controller/lecture.controller.js";
 import { Router } from "express";
 import {
@@ -12,6 +13,7 @@ const router = Router();
 
 // the below is teacher api
 router.route("/add-lecture").post(verifyJwtTeacher, addLectureNotice);
+router.route("/standard-lecture").post(verifyJwtTeacher, standardLecture);
 
 // the below is student api
 router.route("/get-lecture").get(verifyJwtStudent, getLecture);
