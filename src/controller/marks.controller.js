@@ -5,9 +5,14 @@ import { uploadoncloudnary } from "../utils/cloudnary/cloudnary.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { marks } from "../model/marks.model.js";
 import { teachers } from "../model/teacher.model.js";
+import { students } from "../model/student.model.js";
 
 const uploadMarks = asyncHandler(async (req, res) => {
-  const { subjectName, chapterNo, standard ,description} = req.body;
+  const { subjectName, chapterNo, standard, description, board } = req.body;
+
+  if (!chapterNo && !standard && !subjectName && !board) {
+    throw new apiError(402, "subjetName or standard or chapterNo is required ");
+  }
 
   if (!req.teacher && !mongoose.Types.ObjectId.isValid(!req.teacher._id)) {
     throw new apiError(401, "user not logged in or invalid user.");
@@ -19,8 +24,11 @@ const uploadMarks = asyncHandler(async (req, res) => {
     throw new apiError(402, " user not found.");
   }
 
-  if (!chapterNo && !standard && !subjectName) {
-    throw new apiError(402, "subjetName or standard or chapterNo is required ");
+  if (
+    !findTeacher.hiredForStandard.includes(standard) &&
+    !findTeacher.hiredForBoard.includes(board)
+  ) {
+    throw new apiError(405, `can not upload for ${standard} of ${board}`);
   }
 
   const filePath = req.files?.file[0]?.path;
@@ -43,7 +51,8 @@ const uploadMarks = asyncHandler(async (req, res) => {
     chapterNo,
     file: uploadFile.url,
     standard,
-    description
+    description,
+    board,
   });
 
   if (!mark) {
@@ -76,7 +85,8 @@ const uploadMarks = asyncHandler(async (req, res) => {
         standard: 1,
         subjectName: 1,
         file: 1,
-        description:1
+        description: 1,
+        board: 1,
       },
     },
   ]);
@@ -90,4 +100,66 @@ const uploadMarks = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, marksData[0], "marks uploaded."));
 });
 
-export { uploadMarks };
+const getMarks = asyncHandler(async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.student._id)) {
+    throw new apiError(401, "invalid user");
+  }
+
+  const studentData = await students.findById(req.student._id);
+
+  if (!studentData) {
+    throw new apiError(402, "student with id not found");
+  }
+
+  const markData = await marks.findOne({
+    standard: req.student.standard,
+    board: req.student.board,
+  });
+  // console.log(req.student.board);
+  // console.log(req.student.standard);
+
+  const getMark = await marks.aggregate([
+    {
+      $match: {
+        _id: markData._id,
+      },
+    },
+    {
+      $lookup: {
+        from: "teachers",
+        localField: "byTeacher",
+        foreignField: "_id",
+        as: "teacherDetails",
+      },
+    },
+    { $unwind: "$teacherDetails" },
+    {
+      $addFields: {
+        teacherName: "$teacherDetails",
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        standard: 1,
+        subjectName: 1,
+        byTeacher: {
+          _id: "$teacherDetails._id",
+          name: "$teacherDetails.fullName",
+        },
+        chapterNo: 1,
+        file: 1,
+        description: 1,
+        board: 1,
+      },
+    },
+  ]);
+
+  // if (!getMark.length) {
+  //   throw new apiError(405, "marks is empty");
+  // }
+
+  return res.status(200).json(new apiResponse(200, getMark, "marks fetched "));
+});
+
+export { uploadMarks, getMarks };

@@ -7,9 +7,10 @@ import { testNotices } from "../model/test.model.js";
 import { students } from "../model/student.model.js";
 
 const uploadTestNotice = asyncHandler(async (req, res) => {
-  const { subjectName, standard, chapterNo ,time,description} = req.body;
+  const { subjectName, standard, chapterNo, time, description, board } =
+    req.body;
 
-  if (!subjectName && !standard && !chapterNo && !time) {
+  if (!subjectName && !standard && !chapterNo && !time && !board) {
     throw new apiError(
       402,
       "subjectName or chapterNo or standard or time is required."
@@ -32,7 +33,8 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
     standard,
     chapterNo,
     time,
-    description
+    description,
+    board,
   });
 
   if (!test) {
@@ -61,14 +63,15 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
       $project: {
         _id: 1,
         standard: 1,
-        subjectName:1,
-        chapterNo:1,
+        subjectName: 1,
+        chapterNo: 1,
         byTeacher: {
           _id: "$teacherDetails._id",
           name: "$teacherDetails.fullName",
         },
-        time:1,
-        description:1
+        time: 1,
+        description: 1,
+        board: 1,
       },
     },
   ]);
@@ -79,7 +82,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
 
   setTimeout(async () => {
     await lectureNotices.findByIdAndDelete(lecture._id);
-  },  168 * 60 * 60 * 1000);
+  }, 168 * 60 * 60 * 1000);
 
   return res
     .status(200)
@@ -88,7 +91,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
     );
 });
 
-const getTestNotice = asyncHandler(async(req,res)=>{
+const getTestNotice = asyncHandler(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.student._id)) {
     throw new apiError(401, "invalid user");
   }
@@ -101,7 +104,10 @@ const getTestNotice = asyncHandler(async(req,res)=>{
 
   const test = await testNotices.aggregate([
     {
-      $match: { standard: findStudent.standard.toString() },
+      $match: {
+        standard: findStudent.standard.toString(),
+        board: findStudent.board.toString(),
+      },
     },
     {
       $lookup: {
@@ -127,7 +133,8 @@ const getTestNotice = asyncHandler(async(req,res)=>{
           name: "$teacherDetails.fullName",
         },
         time: 1,
-        description:1
+        description: 1,
+        board: 1,
       },
     },
   ]);
@@ -137,7 +144,6 @@ const getTestNotice = asyncHandler(async(req,res)=>{
   }
 
   return res.status(200).json(new apiResponse(200, test, "test found"));
-})
+});
 
-
-export {uploadTestNotice,getTestNotice}
+export { uploadTestNotice, getTestNotice };

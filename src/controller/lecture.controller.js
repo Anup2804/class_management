@@ -8,7 +8,14 @@ import { students } from "../model/student.model.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
   //   const { teacherId } = req.params;
-  const { standard, lectureName, time, description, date } = req.body;
+  const { standard, lectureName, time, description, date, board } = req.body;
+
+  if (!standard && !lectureName && !time && !date && !board) {
+    throw new apiError(
+      402,
+      "standard and lectureName and time and date and board is required."
+    );
+  }
 
   if (!mongoose.Types.ObjectId.isValid(req.teacher._id)) {
     throw new apiError(400, "teacher ID is incorrect");
@@ -20,11 +27,8 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     throw new apiError(402, "teacher with given id not found.");
   }
 
-  if (!standard && !lectureName && !time && !date) {
-    throw new apiError(
-      402,
-      "standard and lectureName and time and date is required."
-    );
+  if (!getTeacher.hiredForBoard.includes(board)) {
+    throw new apiError(405, `can not upload lecture for ${board}`);
   }
 
   const lecture = await lectureNotices.create({
@@ -34,6 +38,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     time,
     description,
     date,
+    board,
   });
 
   const getlecture = await lectureNotices.findById(lecture._id);
@@ -74,6 +79,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
         time: 1,
         description: 1,
         date: 1,
+        board: 1,
       },
     },
   ]);
@@ -112,7 +118,10 @@ const getLecture = asyncHandler(async (req, res) => {
 
   const lectures = await lectureNotices.aggregate([
     {
-      $match: { standard: findStudent.standard.toString() },
+      $match: {
+        standard: findStudent.standard.toString(),
+        board: findStudent.board.toString(),
+      },
     },
     {
       $lookup: {
@@ -139,6 +148,7 @@ const getLecture = asyncHandler(async (req, res) => {
         },
         time: 1,
         description: 1,
+        board: 1,
       },
     },
   ]);
@@ -151,7 +161,7 @@ const getLecture = asyncHandler(async (req, res) => {
 });
 
 const standardLecture = asyncHandler(async (req, res) => {
-  const { standard } = req.body;
+  const { standard, board } = req.body;
   if (!mongoose.Types.ObjectId.isValid(req.teacher._id)) {
     throw new apiError(400, "teacher ID is incorrect");
   }
@@ -162,11 +172,17 @@ const standardLecture = asyncHandler(async (req, res) => {
     throw new apiError(402, "teacher with given id not found.");
   }
 
-  if (!getTeacher.hiredForStandard.includes(standard)) {
+  if (
+    !getTeacher.hiredForStandard.includes(standard) &&
+    !getTeacher.hiredForBoard.includes(board)
+  ) {
     throw new apiError(402, "Cannot access the data");
   }
 
-  const standardLec = await lectureNotices.find({ standard: standard });
+  const standardLec = await lectureNotices.find({
+    standard: standard,
+    board: board,
+  });
 
   if (!standardLec) {
     throw new apiError(405, "not data found");

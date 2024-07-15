@@ -21,7 +21,16 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
 };
 
 const teacherRegister = asyncHandler(async (req, res) => {
-  const { fullName, qulification, email, password, hiredForSubject ,hiredForStandard} = req.body;
+  const {
+    fullName,
+    qulification,
+    email,
+    password,
+    hiredForSubject,
+    hiredForStandard,
+    hiredForBoard,
+    staff,
+  } = req.body;
 
   if (!fullName && !email && !password) {
     throw new apiError(402, "name , email and password are required.");
@@ -47,7 +56,9 @@ const teacherRegister = asyncHandler(async (req, res) => {
     password,
     qulification: qulification,
     hiredForStandard,
-    hiredForSubject
+    hiredForSubject,
+    hiredForBoard,
+    staff
     // hiredForStandard:Array.isArray(hiredForStandard) ? hiredForStandard: [hiredForStandard],
     // hiredForSubject:Array.isArray(hiredForSubject) ? hiredForSubject : [hiredForSubject]
   });
@@ -85,14 +96,14 @@ const teacherLogin = asyncHandler(async (req, res) => {
   const { generateAccessToken, generateRefreshToken } =
     await generateAccessTokenAndRefreshToken(getTeacher._id);
 
-  const loggedInTeacher = await teachers.findById(getTeacher._id).select(
-    "-password -generateRefreshToken"
-  )
+  const loggedInTeacher = await teachers
+    .findById(getTeacher._id)
+    .select("-password -refreshToken");
 
   const option = {
-    httpOnly:true,
-    secure:true
-  }
+    httpOnly: true,
+    secure: true,
+  };
 
   return res
     .status(200)
@@ -101,13 +112,17 @@ const teacherLogin = asyncHandler(async (req, res) => {
     .json(
       new apiResponse(
         200,
-        {  teacherDetails:loggedInTeacher, generateAccessToken, generateRefreshToken },
+        {
+          teacherDetails: loggedInTeacher,
+          generateAccessToken,
+          generateRefreshToken,
+        },
         "user login successful."
       )
     );
 });
 
-const teacherLogout = asyncHandler(async(req,res)=>{
+const teacherLogout = asyncHandler(async (req, res) => {
   req.teacher._id;
   // console.log(req.user)
   await teachers.findByIdAndUpdate(
@@ -134,4 +149,4 @@ const teacherLogout = asyncHandler(async(req,res)=>{
     .json(new apiResponse(200, {}, "User logout successful"));
 });
 
-export { teacherRegister,teacherLogin,teacherLogout };
+export { teacherRegister, teacherLogin, teacherLogout };

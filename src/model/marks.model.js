@@ -11,6 +11,10 @@ const marksSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    board: {
+      type: String,
+      required: true,
+    },
     chapterNo: {
       type: String,
       required: true,

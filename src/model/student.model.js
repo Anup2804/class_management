@@ -52,8 +52,13 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    board:{
+      type:String,
+      required:true
+    },
     subjectChosen: {
       type: [String],
+      default:"ALL",
       required:true
     },
     address: {

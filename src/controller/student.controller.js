@@ -33,13 +33,14 @@ const studentRegister = asyncHandler(async (req, res) => {
     schoolName,
     phoneNo,
     subjectChosen,
+    board
   } = req.body;
 
   if (!email && !password) {
     throw new apiError(402, "email or password are required.");
   }
 
-  if (!fullName && !standard && !schoolName && !phoneNo && !subjectChosen) {
+  if (!fullName && !standard && !schoolName && !phoneNo && !subjectChosen && !board) {
     throw new apiError(402, "all fields with star mark are required.");
   }
 
@@ -57,6 +58,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     password,
     standard,
     schoolName,
+    board,
     phoneNo,
     subjectChosen: subjects,
   });

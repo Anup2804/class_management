@@ -8,7 +8,14 @@ import { notes } from "../model/notes.model.js";
 import { students } from "../model/student.model.js";
 
 const uploadNotes = asyncHandler(async (req, res) => {
-  const { subjectName, chapterNo, standard } = req.body;
+  const { subjectName, chapterNo, standard,board } = req.body;
+
+  if (!subjectName && !chapterNo && !standard && !board) {
+    throw new apiError(
+      402,
+      "subjectname and chapterNo and standard  is required"
+    );
+  }
 
   if (!req.teacher && !mongoose.Types.ObjectId.isValid(!req.teacher._id)) {
     throw new apiError(401, "user not logged in or invalid user.");
@@ -20,12 +27,7 @@ const uploadNotes = asyncHandler(async (req, res) => {
     throw new apiError(402, " user not found.");
   }
 
-  if (!subjectName && !chapterNo && !standard) {
-    throw new apiError(
-      402,
-      "subjectname and chapterNo and standard  is required"
-    );
-  }
+  
 
   const notePath = req.files?.notes[0]?.path;
   if (!notePath) {
@@ -44,6 +46,7 @@ const uploadNotes = asyncHandler(async (req, res) => {
     chapterNo,
     notes: notesUrl.url,
     standard,
+    board
   });
 
   if (!noteFile) {
@@ -76,6 +79,7 @@ const uploadNotes = asyncHandler(async (req, res) => {
         standard: 1,
         subjectName: 1,
         notes: 1,
+        board
       },
     },
   ]);
@@ -102,7 +106,8 @@ const getNotes = asyncHandler(async (req, res) => {
 
   const noteData = await notes.aggregate([
     {
-      $match: { standard : findStudent.standard },
+      $match: { standard : findStudent.standard.toString(),
+      board:findStudent.board.toString() },
     },
     {
       $lookup: {
