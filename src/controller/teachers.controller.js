@@ -4,6 +4,7 @@ import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { teachers } from "../model/teachers.model.js";
 import { students } from "../model/students.model.js";
+import { admins } from "../model/admins.model.js";
 
 const generateAccessTokenAndRefreshToken = async (userId) => {
   try {
@@ -47,6 +48,14 @@ const teacherRegister = asyncHandler(async (req, res) => {
 
   if (isStudent) {
     throw new apiError(402, "you are not the teacher.");
+  }
+
+  const getAdmin = await admins.findOne({
+    adminName: adminName.trim().toLowerCase(),
+  });
+
+  if (!getAdmin) {
+    throw new apiError(402, "admin name is incorrect");
   }
   
   const teacher = await teachers.create({

@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { apiError } from "../utils/apiError.js";
 import { students } from "../model/students.model.js";
 import { apiResponse } from "../utils/apiResponse.js";
+import { admins } from "../model/admins.model.js";
 
 const generateAccessTokenAndRefreshToken = async (userId) => {
   // This function generates the access token for user after login.
@@ -34,14 +35,22 @@ const studentRegister = asyncHandler(async (req, res) => {
     phoneNo,
     subjectChosen,
     board,
-    adminName
+    adminName,
   } = req.body;
 
   if (!email && !password) {
     throw new apiError(402, "email or password are required.");
   }
 
-  if (!fullName && !standard && !schoolName && !phoneNo && !subjectChosen && !board && !adminName) {
+  if (
+    !fullName &&
+    !standard &&
+    !schoolName &&
+    !phoneNo &&
+    !subjectChosen &&
+    !board &&
+    !adminName
+  ) {
     throw new apiError(402, "all fields with star mark are required.");
   }
 
@@ -49,6 +58,14 @@ const studentRegister = asyncHandler(async (req, res) => {
 
   if (existingStudent) {
     throw new apiError(402, "user with email already exist.");
+  }
+
+  const getAdmin = await admins.findOne({
+    adminName: adminName.trim().toLowerCase(),
+  });
+
+  if (!getAdmin) {
+    throw new apiError(402, "admin name is incorrect");
   }
 
   const subjects = JSON.parse(req.body.subjectChosen);
@@ -62,7 +79,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     board,
     phoneNo,
     subjectChosen: subjects,
-    adminName
+    adminName,
   });
 
   const student = await students
@@ -98,9 +115,9 @@ const studentLogin = asyncHandler(async (req, res) => {
   const { generateAccessToken, generateRefreshToken } =
     await generateAccessTokenAndRefreshToken(getStudent._id);
 
-  const loggedInStudent = await students.findById(getStudent._id).select(
-    "-password -refreshToken"
-  );
+  const loggedInStudent = await students
+    .findById(getStudent._id)
+    .select("-password -refreshToken");
 
   const option = {
     httpOnly: true,
@@ -114,13 +131,17 @@ const studentLogin = asyncHandler(async (req, res) => {
     .json(
       new apiResponse(
         200,
-        {  sutdentDetails:loggedInStudent, generateAccessToken, generateRefreshToken },
+        {
+          sutdentDetails: loggedInStudent,
+          generateAccessToken,
+          generateRefreshToken,
+        },
         "user login successful."
       )
     );
 });
 
-const studentLogout = asyncHandler(async(req,res)=>{
+const studentLogout = asyncHandler(async (req, res) => {
   req.student._id;
   // console.log(req.user)
   await students.findByIdAndUpdate(
@@ -147,6 +168,4 @@ const studentLogout = asyncHandler(async(req,res)=>{
     .json(new apiResponse(200, {}, "User logout successful"));
 });
 
-
-
-export { studentRegister, studentLogin ,studentLogout};
+export { studentRegister, studentLogin, studentLogout };

@@ -6,13 +6,13 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-
-
 const adminSchema = new mongoose.Schema(
   {
     adminName: {
       type: String,
       required: true,
+      lowercase: true,
+      trim: true,
     },
     email: {
       type: String,
@@ -64,7 +64,6 @@ adminSchema.methods.generateAccessToken = function () {
       _id: this._id,
       adminName: this.fullName,
       email: this.email,
-      
     },
     process.env.ACCESS_TOKEN_SECRET,
     {

@@ -7,6 +7,12 @@ const marksSchema = new mongoose.Schema(
       ref: "teachers",
       required: true,
     },
+    adminName: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      required: true,
+    },
     subjectName: {
       type: String,
       required: true,

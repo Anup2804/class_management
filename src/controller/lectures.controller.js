@@ -7,38 +7,48 @@ import { lectureNotices } from "../model/lecture.model.js";
 import { students } from "../model/students.model.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
-  //   const { teacherId } = req.params;
-  const { standard, lectureName, time, description, date, board } = req.body;
+  const { standard, lectureName, time, description, date, board, TeacherName } =
+    req.body;
 
-  if (!standard && !lectureName && !time && !date && !board) {
+  if (!standard && !lectureName && !time && !date && !board && !TeacherName) {
     throw new apiError(
       402,
       "standard and lectureName and time and date and board is required."
     );
   }
 
-  if (!mongoose.Types.ObjectId.isValid(req.teacher._id)) {
-    throw new apiError(400, "teacher ID is incorrect");
+  if (!["SSC", "CBSE", "ICSE"].includes(board.toString().toUpperCase())) {
+    throw new apiError(402, "invaild board input.");
   }
 
-  const getTeacher = await teachers.findById(req.teacher._id);
+  if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
+    throw new apiError(400, "admin ID is incorrect");
+  }
+
+  console.log(req.admin);
+
+  const getTeacher = await teachers.findOne({
+    fullName: TeacherName,
+    adminName: req.admin.adminName,
+  });
 
   if (!getTeacher) {
     throw new apiError(402, "teacher with given id not found.");
   }
 
-  if (!getTeacher.hiredForBoard.includes(board)) {
+  if (!getTeacher.hiredForBoard.includes(board.toUpperCase())) {
     throw new apiError(405, `can not upload lecture for ${board}`);
   }
 
   const lecture = await lectureNotices.create({
-    byTeacher: req.teacher._id,
+    byTeacher: getTeacher._id,
     standard,
     lectureName,
     time,
     description,
     date,
     board,
+    adminName: req.admin.adminName,
   });
 
   const getlecture = await lectureNotices.findById(lecture._id);
@@ -46,8 +56,6 @@ const addLectureNotice = asyncHandler(async (req, res) => {
   if (!getlecture) {
     throw new apiError(500, "unable to create a lecture notice.");
   }
-
-  // console.log(getlecture);
 
   const lectureData = await lectureNotices.aggregate([
     {
@@ -80,6 +88,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
         description: 1,
         date: 1,
         board: 1,
+        adminName: 1,
       },
     },
   ]);
@@ -105,7 +114,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     );
 });
 
-const getLecture = asyncHandler(async (req, res) => {
+const studentLecture = asyncHandler(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.student._id)) {
     throw new apiError(401, "invalid user");
   }
@@ -116,11 +125,14 @@ const getLecture = asyncHandler(async (req, res) => {
     throw new apiError(402, "user does not exist");
   }
 
+  // console.log(findStudent);
+
   const lectures = await lectureNotices.aggregate([
     {
       $match: {
-        standard: findStudent.standard.toString(),
         board: findStudent.board.toString(),
+        adminName: findStudent.adminName.toString(),
+        standard: findStudent.standard.toString(),
       },
     },
     {
@@ -133,10 +145,59 @@ const getLecture = asyncHandler(async (req, res) => {
     },
     { $unwind: "$teacherDetails" },
     {
-      $addFields: {
-        teacherName: "$teacherDetails",
+      $project: {
+        _id: 1,
+        standard: 1,
+        lectureName: 1,
+        byTeacher: {
+          _id: "$teacherDetails._id",
+          name: "$teacherDetails.fullName",
+        },
+        time: 1,
+        description: 1,
+        board: 1,
+        adminName: 1,
       },
     },
+  ]);
+
+  if (!lectures.length) {
+    throw new apiError(500, "no lecture found");
+  }
+
+  return res.status(200).json(new apiResponse(200, lectures, "lecture found"));
+});
+
+const teacherLecture = asyncHandler(async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.teacher._id)) {
+    throw new apiError(401, "invalid user");
+  }
+
+  const findTeacher = await teachers.findById(req.teacher._id);
+
+  if (!findTeacher) {
+    throw new apiError(402, "user does not exist");
+  }
+
+
+  // console.log(findStudent);
+
+  const lectures = await lectureNotices.aggregate([
+    {
+      $match: {
+        adminName: findTeacher.adminName.toString(),
+        board: { $in: findTeacher.hiredForBoard.map(board => board.toUpperCase()) }
+      },
+    },
+    {
+      $lookup: {
+        from: "teachers",
+        localField: "byTeacher",
+        foreignField: "_id",
+        as: "teacherDetails",
+      },
+    },
+    { $unwind: "$teacherDetails" },
     {
       $project: {
         _id: 1,
@@ -149,6 +210,7 @@ const getLecture = asyncHandler(async (req, res) => {
         time: 1,
         description: 1,
         board: 1,
+        adminName: 1,
       },
     },
   ]);
@@ -228,4 +290,4 @@ const standardLecture = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, standLec, "data got of standard lecture"));
 });
 
-export { addLectureNotice, getLecture, standardLecture };
+export { addLectureNotice, studentLecture, standardLecture, teacherLecture };

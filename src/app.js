@@ -49,8 +49,8 @@ import teacherRouter from "./routes/teacher.routes.js";
 import lectureRouter from "./routes/lecture.router.js";
 import testRouter from "./routes/test.router.js";
 import notesRouter from "./routes/notes.router.js";
-import marksRouter from "./routes/marks.router.js"
-import adminsRouter from "./routes/admins.router.js"
+import marksRouter from "./routes/marks.router.js";
+import adminsRouter from "./routes/admins.router.js";
 // intialisation of router
 
 app.use("/api/v1/student", studentRouter);
@@ -58,7 +58,7 @@ app.use("/api/v1/teacher", teacherRouter);
 app.use("/api/v1/lecture", lectureRouter);
 app.use("/api/v1/test", testRouter);
 app.use("/api/v1/notes", notesRouter);
-app.use("/api/v1/marks",marksRouter);
-app.use("/api/v1/admins",adminsRouter)
+app.use("/api/v1/marks", marksRouter);
+app.use("/api/v1/admins", adminsRouter);
 
 export { app };

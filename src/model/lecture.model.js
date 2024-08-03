@@ -7,6 +7,12 @@ const lectureSchema = new mongoose.Schema(
       ref: "teachers",
       required: true,
     },
+    adminName:{
+      type:String,
+      trim:true,
+      lowercase:true,
+      required:true
+    },
     lectureName: {
       type: String,
       required: true,
@@ -29,6 +35,7 @@ const lectureSchema = new mongoose.Schema(
     board: {
       type: String,
       required: true,
+      uppercase:true
     },
   },
   { timestamps: true }

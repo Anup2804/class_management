@@ -6,6 +6,7 @@ import { apiResponse } from "../utils/apiResponse.js";
 import { marks } from "../model/marks.model.js";
 import { teachers } from "../model/teachers.model.js";
 import { students } from "../model/students.model.js";
+import { response } from "express";
 
 const uploadMarks = asyncHandler(async (req, res) => {
   const { subjectName, chapterNo, standard, description, board } = req.body;
@@ -53,6 +54,7 @@ const uploadMarks = asyncHandler(async (req, res) => {
     standard,
     description,
     board,
+    adminName: req.teacher.adminName,
   });
 
   if (!mark) {
@@ -87,6 +89,7 @@ const uploadMarks = asyncHandler(async (req, res) => {
         file: 1,
         description: 1,
         board: 1,
+        adminName: 1,
       },
     },
   ]);
@@ -122,6 +125,7 @@ const getMarks = asyncHandler(async (req, res) => {
     {
       $match: {
         _id: markData._id,
+        adminName: req.student.adminName,
       },
     },
     {
@@ -151,15 +155,29 @@ const getMarks = asyncHandler(async (req, res) => {
         file: 1,
         description: 1,
         board: 1,
+        adminName: 1,
       },
     },
   ]);
 
-  // if (!getMark.length) {
-  //   throw new apiError(405, "marks is empty");
-  // }
+  if (!getMark.length) {
+    throw new apiError(405, "marks is empty");
+  }
 
   return res.status(200).json(new apiResponse(200, getMark, "marks fetched "));
 });
 
-export { uploadMarks, getMarks };
+const getAllMarks = asyncHandler(async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
+    throw new apiError(402, "invalid id");
+  }
+  const getmarks = await marks.findOne({ adminName: req.admin.adminName });
+
+  if (!getmarks) {
+    throw new apiError(402, "not data found.");
+  }
+
+  return res.status(200).json(new apiResponse(200, getmarks, "data found."));
+});
+
+export { uploadMarks, getMarks,getAllMarks };
