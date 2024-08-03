@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
-import { teachers } from "../model/teacher.model.js";
-import { students } from "../model/student.model.js";
+import { teachers } from "../model/teachers.model.js";
+import { students } from "../model/students.model.js";
 
 const generateAccessTokenAndRefreshToken = async (userId) => {
   try {
@@ -30,9 +30,10 @@ const teacherRegister = asyncHandler(async (req, res) => {
     hiredForStandard,
     hiredForBoard,
     staff,
+    adminName
   } = req.body;
 
-  if (!fullName && !email && !password) {
+  if (!fullName && !email && !password && !adminName) {
     throw new apiError(402, "name , email and password are required.");
   }
 
@@ -47,9 +48,7 @@ const teacherRegister = asyncHandler(async (req, res) => {
   if (isStudent) {
     throw new apiError(402, "you are not the teacher.");
   }
-
-  //   const hiredSubject = JSON.parse(req.body.hiredForSubject);
-
+  
   const teacher = await teachers.create({
     fullName,
     email,
@@ -58,14 +57,15 @@ const teacherRegister = asyncHandler(async (req, res) => {
     hiredForStandard,
     hiredForSubject,
     hiredForBoard,
-    staff
+    staff,
+    adminName
     // hiredForStandard:Array.isArray(hiredForStandard) ? hiredForStandard: [hiredForStandard],
     // hiredForSubject:Array.isArray(hiredForSubject) ? hiredForSubject : [hiredForSubject]
   });
 
   const newTeacher = await teachers
     .findById(teacher._id)
-    .select("-password -refreshtoken");
+    .select("-password -refreshToken");
 
   return res
     .status(200)

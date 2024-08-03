@@ -2,19 +2,15 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { apiError } from "../utils/apiError.js";
+// import { apiError } from "../utils/apiError.js";
 
 dotenv.config();
 
-const subjectChosen = new mongoose.Schema({
-  subjectName: {
-    type: String,
-  },
-});
 
-const studentSchema = new mongoose.Schema(
+
+const adminSchema = new mongoose.Schema(
   {
-    fullName: {
+    adminName: {
       type: String,
       required: true,
     },
@@ -44,38 +40,6 @@ const studentSchema = new mongoose.Schema(
           "password should contain one small letter, big letter,one number,on special character",
       },
     },
-    standard: {
-      type: String,
-      required: true,
-    },
-    schoolName: {
-      type: String,
-      required: true,
-    },
-    board:{
-      type:String,
-      required:true
-    },
-    subjectChosen: {
-      type: [String],
-      default:"ALL",
-      required:true
-    },
-    address: {
-      type: String,
-      // required: true,
-    },
-    phoneNo: {
-      type: String,
-      required: true,
-      validate: {
-        validator: (val) => {
-          const re = /^\d{10}$/;
-          return val.match(re);
-        },
-        message: "phone number should be of 10 digit.",
-      },
-    },
     refreshToken: {
       type: String,
     },
@@ -83,24 +47,24 @@ const studentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-studentSchema.pre("save", async function (next) {
+adminSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-studentSchema.methods.isPasswordCorrect = async function (password) {
+adminSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-studentSchema.methods.generateAccessToken = function () {
+adminSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
-      fullName: this.fullName,
+      adminName: this.fullName,
       email: this.email,
-      class: this.class,
+      
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -109,7 +73,7 @@ studentSchema.methods.generateAccessToken = function () {
   );
 };
 
-studentSchema.methods.generateRefreshToken = function () {
+adminSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id,
@@ -123,4 +87,4 @@ studentSchema.methods.generateRefreshToken = function () {
   );
 };
 
-export const students = mongoose.model("students", studentSchema);
+export const admins = mongoose.model("admins", adminSchema);

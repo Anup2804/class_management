@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { apiError } from "../utils/apiError.js";
-import { students } from "../model/student.model.js";
+import { students } from "../model/students.model.js";
 import { apiResponse } from "../utils/apiResponse.js";
 
 const generateAccessTokenAndRefreshToken = async (userId) => {
@@ -33,14 +33,15 @@ const studentRegister = asyncHandler(async (req, res) => {
     schoolName,
     phoneNo,
     subjectChosen,
-    board
+    board,
+    adminName
   } = req.body;
 
   if (!email && !password) {
     throw new apiError(402, "email or password are required.");
   }
 
-  if (!fullName && !standard && !schoolName && !phoneNo && !subjectChosen && !board) {
+  if (!fullName && !standard && !schoolName && !phoneNo && !subjectChosen && !board && !adminName) {
     throw new apiError(402, "all fields with star mark are required.");
   }
 
@@ -61,11 +62,12 @@ const studentRegister = asyncHandler(async (req, res) => {
     board,
     phoneNo,
     subjectChosen: subjects,
+    adminName
   });
 
   const student = await students
     .findOne(newStudent._id)
-    .select("-password -refreshtoken");
+    .select("-password -refreshToken");
 
   if (!student) {
     throw new apiError(500, "unable to register student.");

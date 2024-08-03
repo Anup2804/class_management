@@ -3,7 +3,7 @@ import {
   studentLogin,
   studentLogout,
   studentRegister,
-} from "../controller/student.controller.js";
+} from "../controller/students.controller.js";
 import { verifyJwtStudent } from "../middleware/auth.middleware.js";
 
 const router = Router();

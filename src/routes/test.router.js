@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJwtStudent, verifyJwtTeacher } from "../middleware/auth.middleware.js";
-import { getTestNotice, uploadTestNotice } from "../controller/test.controller.js";
+import { getTestNotice, uploadTestNotice } from "../controller/tests.controller.js";
 
 const router = Router();
 

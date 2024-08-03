@@ -4,8 +4,8 @@ import { apiError } from "../utils/apiError.js";
 import { uploadoncloudnary } from "../utils/cloudnary/cloudnary.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { marks } from "../model/marks.model.js";
-import { teachers } from "../model/teacher.model.js";
-import { students } from "../model/student.model.js";
+import { teachers } from "../model/teachers.model.js";
+import { students } from "../model/students.model.js";
 
 const uploadMarks = asyncHandler(async (req, res) => {
   const { subjectName, chapterNo, standard, description, board } = req.body;

@@ -12,8 +12,15 @@ const teacherSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    adminName:{
+      type: String,
+      required:true,
+      lowercase:true,
+      trim:true
+    },
     qualification: {
       type: String,
+      trim:true
     },
     email: {
       type: String,
@@ -54,6 +61,7 @@ const teacherSchema = new mongoose.Schema(
     },
     staff: {
       type: String,
+      trim:true,
       default: "Visiting",
     },
     refreshToken: {

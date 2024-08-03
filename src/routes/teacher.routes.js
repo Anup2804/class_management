@@ -3,7 +3,7 @@ import {
   teacherLogin,
   teacherLogout,
   teacherRegister,
-} from "../controller/teacher.controller.js";
+} from "../controller/teachers.controller.js";
 import { verifyJwtTeacher } from "../middleware/auth.middleware.js";
 
 const router = Router();

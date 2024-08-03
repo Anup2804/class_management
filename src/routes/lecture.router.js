@@ -2,7 +2,7 @@ import {
   addLectureNotice,
   getLecture,
   standardLecture,
-} from "../controller/lecture.controller.js";
+} from "../controller/lectures.controller.js";
 import { Router } from "express";
 import {
   verifyJwtStudent,

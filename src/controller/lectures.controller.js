@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
-import { teachers } from "../model/teacher.model.js";
+import { teachers } from "../model/teachers.model.js";
 import { lectureNotices } from "../model/lecture.model.js";
-import { students } from "../model/student.model.js";
+import { students } from "../model/students.model.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
   //   const { teacherId } = req.params;
