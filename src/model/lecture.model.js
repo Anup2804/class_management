@@ -41,7 +41,7 @@ const lectureSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const lectureNotices = new mongoose.model(
-  "lectureNotices",
+export const lectures = new mongoose.model(
+  "lectures",
   lectureSchema
 );

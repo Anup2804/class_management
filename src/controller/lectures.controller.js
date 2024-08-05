@@ -3,7 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { teachers } from "../model/teachers.model.js";
-import { lectureNotices } from "../model/lecture.model.js";
+import { lectures } from "../model/lecture.model.js";
 import { students } from "../model/students.model.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
@@ -40,7 +40,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     throw new apiError(405, `can not upload lecture for ${board}`);
   }
 
-  const lecture = await lectureNotices.create({
+  const lecture = await lectures.create({
     byTeacher: getTeacher._id,
     standard,
     lectureName,
@@ -51,13 +51,13 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     adminName: req.admin.adminName,
   });
 
-  const getlecture = await lectureNotices.findById(lecture._id);
+  const getlecture = await lectures.findById(lecture._id);
 
   if (!getlecture) {
     throw new apiError(500, "unable to create a lecture notice.");
   }
 
-  const lectureData = await lectureNotices.aggregate([
+  const lectureData = await lectures.aggregate([
     {
       $match: { _id: lecture._id },
     },
@@ -99,9 +99,9 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     throw new apiError(500, "lecture created but lectureData not created");
   }
 
-  setTimeout(async () => {
-    await lectureNotices.findByIdAndDelete(lecture._id);
-  }, 20 * 60 * 60 * 1000);
+  // setTimeout(async () => {
+  //   await lectures.findByIdAndDelete(lecture._id);
+  // }, 20 * 60 * 60 * 1000);
 
   return res
     .status(200)
@@ -127,7 +127,7 @@ const studentLecture = asyncHandler(async (req, res) => {
 
   // console.log(findStudent);
 
-  const lectures = await lectureNotices.aggregate([
+  const lectures = await lectures.aggregate([
     {
       $match: {
         board: findStudent.board.toString(),
@@ -179,14 +179,15 @@ const teacherLecture = asyncHandler(async (req, res) => {
     throw new apiError(402, "user does not exist");
   }
 
-
   // console.log(findStudent);
 
-  const lectures = await lectureNotices.aggregate([
+  const lectures = await lectures.aggregate([
     {
       $match: {
         adminName: findTeacher.adminName.toString(),
-        board: { $in: findTeacher.hiredForBoard.map(board => board.toUpperCase()) }
+        board: {
+          $in: findTeacher.hiredForBoard.map((board) => board.toUpperCase()),
+        },
       },
     },
     {
@@ -241,7 +242,7 @@ const standardLecture = asyncHandler(async (req, res) => {
     throw new apiError(402, "Cannot access the data");
   }
 
-  const standardLec = await lectureNotices.find({
+  const standardLec = await lectures.find({
     standard: standard,
     board: board,
   });
@@ -250,7 +251,7 @@ const standardLecture = asyncHandler(async (req, res) => {
     throw new apiError(405, "not data found");
   }
 
-  const standLec = await lectureNotices.aggregate([
+  const standLec = await lectures.aggregate([
     {
       $match: { standard: standard },
     },
