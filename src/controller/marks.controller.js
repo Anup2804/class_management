@@ -44,7 +44,7 @@ const uploadMarks = asyncHandler(async (req, res) => {
   if (!uploadFile) {
     throw new apiError(405, "file is missing");
   }
-  console.log(uploadFile);
+  // console.log(uploadFile);
 
   const mark = await marks.create({
     byTeacher: req.teacher._id,

@@ -45,9 +45,9 @@ app.use((err, req, res, next) => {
 // import router
 
 import studentRouter from "./routes/students.router.js";
-import teacherRouter from "./routes/teacher.routes.js";
-import lectureRouter from "./routes/lecture.router.js";
-import testRouter from "./routes/test.router.js";
+import teacherRouter from "./routes/teachers.routes.js";
+import lectureRouter from "./routes/lectures.router.js";
+import testRouter from "./routes/tests.router.js";
 import notesRouter from "./routes/notes.router.js";
 import marksRouter from "./routes/marks.router.js";
 import adminsRouter from "./routes/admins.router.js";

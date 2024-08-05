@@ -8,7 +8,7 @@ import { notes } from "../model/notes.model.js";
 import { students } from "../model/students.model.js";
 
 const uploadNotes = asyncHandler(async (req, res) => {
-  const { subjectName, chapterNo, standard,board } = req.body;
+  const { subjectName, chapterNo, standard, board } = req.body;
 
   if (!subjectName && !chapterNo && !standard && !board) {
     throw new apiError(
@@ -27,8 +27,6 @@ const uploadNotes = asyncHandler(async (req, res) => {
     throw new apiError(402, " user not found.");
   }
 
-  
-
   const notePath = req.files?.notes[0]?.path;
   if (!notePath) {
     throw new apiError(402, "notepath is empty");
@@ -41,12 +39,13 @@ const uploadNotes = asyncHandler(async (req, res) => {
   }
 
   const noteFile = await notes.create({
+    adminName: req.teacher.adminName,
     byTeacher: req.teacher._id,
     subjectName,
     chapterNo,
     notes: notesUrl.url,
     standard,
-    board
+    board,
   });
 
   if (!noteFile) {
@@ -79,13 +78,16 @@ const uploadNotes = asyncHandler(async (req, res) => {
         standard: 1,
         subjectName: 1,
         notes: 1,
-        board
+        adminName: 1,
       },
     },
   ]);
 
-  if(!noteData){
-    throw new apiError(500,'noteFile is created and note data is unable to create')
+  if (!noteData) {
+    throw new apiError(
+      500,
+      "noteFile is created and note data is unable to create"
+    );
   }
 
   return res
@@ -106,8 +108,11 @@ const getNotes = asyncHandler(async (req, res) => {
 
   const noteData = await notes.aggregate([
     {
-      $match: { standard : findStudent.standard.toString(),
-      board:findStudent.board.toString() },
+      $match: {
+        standard: findStudent.standard.toString(),
+        board: findStudent.board.toString(),
+        adminName: findStudent.adminName.toString(),
+      },
     },
     {
       $lookup: {
@@ -131,19 +136,18 @@ const getNotes = asyncHandler(async (req, res) => {
         standard: 1,
         subjectName: 1,
         notes: 1,
+        adminName:1
       },
     },
   ]);
 
-  if(!noteData){
-    throw new apiError(500,'note data is unable to retrive')
+  if (!noteData) {
+    throw new apiError(500, "note data is unable to retrive");
   }
 
   return res
     .status(200)
     .json(new apiResponse(200, noteData, "notes recieved."));
-
-
 });
 
-export { uploadNotes ,getNotes};
+export { uploadNotes, getNotes };

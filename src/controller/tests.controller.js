@@ -29,6 +29,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
 
   const test = await testNotices.create({
     byTeacher: req.teacher._id,
+    adminName: req.teacher.adminName,
     subjectName,
     standard,
     chapterNo,
@@ -72,6 +73,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
         time: 1,
         description: 1,
         board: 1,
+        adminName:1
       },
     },
   ]);
@@ -107,6 +109,7 @@ const getTestNotice = asyncHandler(async (req, res) => {
       $match: {
         standard: findStudent.standard.toString(),
         board: findStudent.board.toString(),
+        adminName: findStudent.adminName.toString()
       },
     },
     {
@@ -135,6 +138,7 @@ const getTestNotice = asyncHandler(async (req, res) => {
         time: 1,
         description: 1,
         board: 1,
+        adminName:1
       },
     },
   ]);
