@@ -291,4 +291,69 @@ const standardLecture = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, standLec, "data got of standard lecture"));
 });
 
-export { addLectureNotice, studentLecture, standardLecture, teacherLecture };
+const updateLecture = asyncHandler(async (req, res) => {
+  const { lectureId } = req.params;
+  const { standard, time } = req.body;
+
+  if (!standard && !time && !lectureId) {
+    throw new apiError(402, "all inut are required.");
+  }
+
+  const getlecture = await lectures.findOne({
+    _id: new mongoose.Types.ObjectId(lectureId),
+    adminName: req.admin.adminName.toString(),
+  });
+
+  if (!getlecture) {
+    throw new apiError(402, "no lecture found");
+  }
+
+  const update = await lectures.findByIdAndUpdate(
+    lectureId,
+    {
+      standard: standard,
+      time: time,
+    },
+    { new: true }
+  );
+
+  if (!update) {
+    throw new apiError(402, "unable to update.");
+  }
+
+  return res.status(200).json(new apiResponse(200, update, "lecture update"));
+});
+
+const deleteLecture = asyncHandler(async (req, res) => {
+  const { lectureId } = req.params;
+
+  if (!req.admin) {
+    throw new apiError(402, "invalid accesstoken");
+  }
+
+  const getLecture = await lectures.findOne({
+    _id: lectureId,
+    adminName: req.admin.adminName,
+  });
+
+  if (!getLecture) {
+    throw new apiError(405, "no lecture found for deletion");
+  }
+
+  const deleteLecture = await lectures.findByIdAndDelete(lectureId);
+
+  if (!deleteLecture) {
+    throw new apiError(405, "unable to delete data");
+  }
+
+  return res.status(200).json(new apiResponse(200, "lecture deleted."));
+});
+
+export {
+  addLectureNotice,
+  studentLecture,
+  standardLecture,
+  teacherLecture,
+  updateLecture,
+  deleteLecture,
+};

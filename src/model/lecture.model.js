@@ -24,6 +24,7 @@ const lectureSchema = new mongoose.Schema(
     date: {
       type: String,
       required: true,
+      default:"Everyday"
     },
     time: {
       type: String,
@@ -42,6 +43,6 @@ const lectureSchema = new mongoose.Schema(
 );
 
 export const lectures = new mongoose.model(
-  "lectures",
+  "lecturenotices",
   lectureSchema
 );
