@@ -6,6 +6,7 @@ import {
   verifyJwtTeacher,
 } from "../middleware/auth.middleware.js";
 import {
+  delMarks,
   getAllMarks,
   getMarks,
   uploadMarks,
@@ -19,7 +20,7 @@ router.route("/upload-marks").post(
   upload.fields([
     {
       name: "file",
-      maxCount: 1,
+      maxCount: 20,
     },
   ]),
   verifyJwtTeacher,
@@ -33,5 +34,7 @@ router.route("/get-marks").get(verifyJwtStudent, getMarks);
 // this api is for admin
 
 router.route("/marksDetail").get(verifyJwtAdmin, getAllMarks);
+router.route("/del/:MarksId").post(verifyJwtAdmin,delMarks
+)
 
 export default router;

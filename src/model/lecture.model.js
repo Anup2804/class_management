@@ -43,6 +43,6 @@ const lectureSchema = new mongoose.Schema(
 );
 
 export const lectures = new mongoose.model(
-  "lecturenotices",
+  "lectures",
   lectureSchema
 );

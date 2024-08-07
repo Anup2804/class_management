@@ -4,6 +4,7 @@ import {
   standardLecture,
   studentLecture,
   teacherLecture,
+  todayLecture,
   updateLecture,
 } from "../controller/lectures.controller.js";
 import { Router } from "express";
@@ -27,5 +28,6 @@ router.route("/get-lecture").get(verifyJwtStudent, studentLecture);
 router.route("/add-lecture").post(verifyJwtAdmin, addLectureNotice);
 router.route("/update-lecture/:lectureId").post(verifyJwtAdmin, updateLecture);
 router.route("/del/:lectureId").post(verifyJwtAdmin, deleteLecture);
+router.route('/today').post(verifyJwtAdmin,todayLecture)
 
 export default router;

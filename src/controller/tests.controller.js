@@ -7,10 +7,10 @@ import { testNotices } from "../model/tests.model.js";
 import { students } from "../model/students.model.js";
 
 const uploadTestNotice = asyncHandler(async (req, res) => {
-  const { subjectName, standard, chapterNo, time, description, board } =
+  const { subjectName, standard, chapterNo, time, description, board, date } =
     req.body;
 
-  if (!subjectName && !standard && !chapterNo && !time && !board) {
+  if (!subjectName && !standard && !chapterNo && !time && !board && !date) {
     throw new apiError(
       402,
       "subjectName or chapterNo or standard or time is required."
@@ -27,6 +27,12 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
     throw new apiError(402, "you are not vaild teacher");
   }
 
+  const convertDate = (date) => {
+    const [day, month, year] = date.split('/');
+    return `${year}-${month}-${day}`;
+  };
+
+
   const test = await testNotices.create({
     byTeacher: req.teacher._id,
     adminName: req.teacher.adminName,
@@ -36,6 +42,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
     time,
     description,
     board,
+    date:convertDate(date),
   });
 
   if (!test) {
@@ -73,7 +80,8 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
         time: 1,
         description: 1,
         board: 1,
-        adminName:1
+        adminName: 1,
+        date: 1,
       },
     },
   ]);
@@ -82,9 +90,9 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
     throw new apiError(500, "testdata is not created.");
   }
 
-  setTimeout(async () => {
-    await lectureNotices.findByIdAndDelete(lecture._id);
-  }, 168 * 60 * 60 * 1000);
+  // setTimeout(async () => {
+  //   await lectureNotices.findByIdAndDelete(lecture._id);
+  // }, 168 * 60 * 60 * 1000);
 
   return res
     .status(200)
@@ -109,7 +117,7 @@ const getTestNotice = asyncHandler(async (req, res) => {
       $match: {
         standard: findStudent.standard.toString(),
         board: findStudent.board.toString(),
-        adminName: findStudent.adminName.toString()
+        adminName: findStudent.adminName.toString(),
       },
     },
     {
@@ -138,7 +146,8 @@ const getTestNotice = asyncHandler(async (req, res) => {
         time: 1,
         description: 1,
         board: 1,
-        adminName:1
+        adminName: 1,
+        date:1,
       },
     },
   ]);
@@ -149,5 +158,6 @@ const getTestNotice = asyncHandler(async (req, res) => {
 
   return res.status(200).json(new apiResponse(200, test, "test found"));
 });
+
 
 export { uploadTestNotice, getTestNotice };

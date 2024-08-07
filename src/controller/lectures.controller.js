@@ -7,10 +7,10 @@ import { lectures } from "../model/lecture.model.js";
 import { students } from "../model/students.model.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
-  const { standard, lectureName, time, description, date, board, TeacherName } =
+  const { standard, lectureName, time, description, board, TeacherName } =
     req.body;
 
-  if (!standard && !lectureName && !time && !date && !board && !TeacherName) {
+  if (!standard && !lectureName && !time && !board && !TeacherName) {
     throw new apiError(
       402,
       "standard and lectureName and time and date and board is required."
@@ -46,7 +46,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     lectureName,
     time,
     description,
-    date,
+    date: new Date().toISOString().split("T")[0],
     board,
     adminName: req.admin.adminName,
   });
@@ -133,6 +133,7 @@ const studentLecture = asyncHandler(async (req, res) => {
         board: findStudent.board.toString(),
         adminName: findStudent.adminName.toString(),
         standard: findStudent.standard.toString(),
+        date:new Date().toISOString().split("T")[0]
       },
     },
     {
@@ -188,6 +189,7 @@ const teacherLecture = asyncHandler(async (req, res) => {
         board: {
           $in: findTeacher.hiredForBoard.map((board) => board.toUpperCase()),
         },
+        date:new Date().toISOString().split("T")[0]
       },
     },
     {
@@ -313,6 +315,7 @@ const updateLecture = asyncHandler(async (req, res) => {
     {
       standard: standard,
       time: time,
+      date: new Date().toISOString().split("T")[0]
     },
     { new: true }
   );
@@ -330,6 +333,8 @@ const deleteLecture = asyncHandler(async (req, res) => {
   if (!req.admin) {
     throw new apiError(402, "invalid accesstoken");
   }
+
+  // console.log(new Date().toISOString().split('T')[0] )
 
   const getLecture = await lectures.findOne({
     _id: lectureId,
@@ -349,6 +354,25 @@ const deleteLecture = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, "lecture deleted."));
 });
 
+const todayLecture = asyncHandler(async (req, res) => {
+  if (!req.admin) {
+    throw new apiError(402, "invalid token");
+  }
+
+  const findlecture = await lectures.find({
+    date: new Date().toISOString().split("T")[0],
+    adminName: req.admin.adminName,
+  });
+
+  if (!findlecture) {
+    throw new apiError(402, "no data found");
+  }
+
+  return res.status(200).json(new apiResponse(200, findlecture, "data found"));
+});
+
+
+
 export {
   addLectureNotice,
   studentLecture,
@@ -356,4 +380,5 @@ export {
   teacherLecture,
   updateLecture,
   deleteLecture,
+  todayLecture,
 };
