@@ -69,7 +69,7 @@ const studentSchema = new mongoose.Schema(
     subjectChosen: {
       type: [String],
       default: "ALL",
-      required: true,
+      // required: true,
     },
     address: {
       type: String,

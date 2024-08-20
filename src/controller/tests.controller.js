@@ -159,5 +159,37 @@ const getTestNotice = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, test, "test found"));
 });
 
+const getAllTest = asyncHandler(async(req,res)=>{
+  if(!req.admin){
+    throw new apiError(402,'invalid token')
+  }
 
-export { uploadTestNotice, getTestNotice };
+  const getAll = await testNotices.find({
+    adminName:req.admin.adminName
+  })
+
+  if(!getAll){
+    throw new apiError(402,'no data found')
+  }
+
+  return res.status(200).json(new apiResponse(200,getAll,'data found'))
+})
+
+const todayTest = asyncHandler(async(req,res)=>{
+  if(!req.admin){
+    throw new apiError(402,'invalid admin')
+  }
+
+  const todayTest = await testNotices.find({
+    date:new Date().toISOString().split("T")[0],
+    adminName:req.admin.adminName
+  })
+
+  if(!todayTest){
+    return new apiError(402,'data not found for today test.')
+  }
+
+  return res.status(200).json(new apiResponse(200,todayTest,'data found'))
+})
+
+export { uploadTestNotice, getTestNotice,getAllTest ,todayTest};
