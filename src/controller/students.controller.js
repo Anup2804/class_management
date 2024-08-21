@@ -68,7 +68,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     throw new apiError(402, "admin name is incorrect");
   }
 
-  const subjects = JSON.parse(req.body.subjectChosen);
+  // const subjects = JSON.parse(req.body.subjectChosen);
 
   const newStudent = await students.create({
     fullName,
@@ -78,7 +78,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     schoolName,
     board,
     phoneNo,
-    subjectChosen: subjects,
+    subjectChosen,
     adminName,
   });
 
