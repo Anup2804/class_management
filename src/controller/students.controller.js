@@ -26,6 +26,14 @@ const studentRegister = asyncHandler(async (req, res) => {
   // validate the user input.
   // find user exist or not in the database.
   // if user not exist create the user.
+
+  if (req.headers['content-type'] !== 'application/json') {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Content-Type must be application/json',
+    });
+  }
+  
   const {
     fullName,
     email,
@@ -38,7 +46,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     adminName,
   } = req.body;
 
-  if (!email && !password) {
+  if (!email || !password) {
     throw new apiError(402, "email or password are required.");
   }
 
