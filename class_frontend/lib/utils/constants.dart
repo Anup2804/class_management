@@ -11,7 +11,7 @@ TextStyle fontSmall = const TextStyle(
 TextStyle fontRegular = const TextStyle(
   fontFamily: 'Poppins',
   fontSize: 18,
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.w400,
 );
 
 TextStyle fontMedium = const TextStyle(
