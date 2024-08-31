@@ -107,6 +107,13 @@ class _StudentLoginState extends State<StudentLogin> {
                                             content: Text(
                                                 'Student login successfully!')),
                                       );
+                                      Future.delayed(const Duration(seconds: 1),
+                                          () {
+                                        Navigator.of(context)
+                                            .pushNamed('/home');
+
+                                        _formKey.currentState?.reset();
+                                      });
                                     } catch (error) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(

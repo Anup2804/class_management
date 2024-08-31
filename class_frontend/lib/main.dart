@@ -1,5 +1,6 @@
 import 'package:class_frontend/auth/login.dart';
 import 'package:class_frontend/auth/signup.dart';
+import 'package:class_frontend/pages/otherPages/home.dart';
 import 'package:class_frontend/services/business_logic/student_auth.dart';
 import 'package:class_frontend/services/provider/student.provider.dart';
 import 'package:class_frontend/utils/colors.dart';
@@ -45,7 +46,8 @@ class MyApp extends StatelessWidget {
         // home: SignUp(),
         routes: {
           '/': (context) => StudentLogin(),
-          '/signup': (context) => SignUp()
+          '/signup': (context) => SignUp(),
+          '/home' : (context) => HomeScreen()
         },
       ),
     );
