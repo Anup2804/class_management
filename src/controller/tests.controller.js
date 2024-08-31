@@ -115,8 +115,8 @@ const getTestNotice = asyncHandler(async (req, res) => {
   const test = await testNotices.aggregate([
     {
       $match: {
-        standard: findStudent.standard.toUpperCase().toString(),
-        board: findStudent.board.toString(),
+        standard: findStudent.standard.toString(),
+        board: findStudent.board.toUpperCase().toString(),
         adminName: findStudent.adminName.toString(),
       },
     },
