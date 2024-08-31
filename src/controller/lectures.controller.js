@@ -130,7 +130,7 @@ const studentLecture = asyncHandler(async (req, res) => {
   const lecture = await lectures.aggregate([
     {
       $match: {
-        board: findStudent.board.toString(),
+        board: findStudent.board.toUpperCase().toString(),
         adminName: findStudent.adminName.toString(),
         standard: findStudent.standard.toString(),
         date:new Date().toISOString().split("T")[0]
