@@ -24,16 +24,17 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor:backGroundColor ,
         elevation: 3,
+        title: Text('Dashboard'),
       ),
       body: SafeArea(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            height: 100,
-            width: double.infinity,
-            color: Colors.blue,
-          ),
+          // Container(
+          //   height: 100,
+          //   width: double.infinity,
+          //   color: Colors.blue,
+          // ),
           HomeGrid()],
       )),
     );

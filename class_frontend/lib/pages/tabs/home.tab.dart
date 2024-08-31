@@ -13,7 +13,7 @@ class HomeGrid extends StatelessWidget {
           scale: 7.5,
           title: 'Lecture',
           onTap: () {
-            print('lrcture');
+            Navigator.of(context).pushNamed('/lecture');
           }),
       CustomIcon(
           imgurl: 'assets/icons/test.png',

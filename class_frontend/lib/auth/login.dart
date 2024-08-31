@@ -127,6 +127,18 @@ class _StudentLoginState extends State<StudentLogin> {
                                   style:
                                       Theme.of(context).textTheme.displayMedium,
                                 )),
+                            InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed('/signup');
+                                },
+                                child: Text("Click here to Signup",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: const Color.fromARGB(
+                                                255, 194, 20, 8)
+                                            .withOpacity(.8))))
                           ],
                         ),
                       )),
