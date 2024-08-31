@@ -127,7 +127,7 @@ const studentLecture = asyncHandler(async (req, res) => {
 
   // console.log(findStudent);
 
-  const lectures = await lectures.aggregate([
+  const lecture = await lectures.aggregate([
     {
       $match: {
         board: findStudent.board.toString(),
@@ -162,11 +162,11 @@ const studentLecture = asyncHandler(async (req, res) => {
     },
   ]);
 
-  if (!lectures.length) {
+  if (!lecture.length) {
     throw new apiError(500, "no lecture found");
   }
 
-  return res.status(200).json(new apiResponse(200, lectures, "lecture found"));
+  return res.status(200).json(new apiResponse(200, lecture, "lecture found"));
 });
 
 const teacherLecture = asyncHandler(async (req, res) => {
