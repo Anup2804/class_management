@@ -115,7 +115,7 @@ const getTestNotice = asyncHandler(async (req, res) => {
   const test = await testNotices.aggregate([
     {
       $match: {
-        standard: findStudent.standard.toString(),
+        standard: findStudent.standard.toUpperCase().toString(),
         board: findStudent.board.toString(),
         adminName: findStudent.adminName.toString(),
       },
@@ -153,7 +153,7 @@ const getTestNotice = asyncHandler(async (req, res) => {
   ]);
 
   if (!test.length) {
-    throw new apiError(500, "no lecture found");
+    throw new apiError(500, "no Test found");
   }
 
   return res.status(200).json(new apiResponse(200, test, "test found"));

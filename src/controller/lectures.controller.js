@@ -127,13 +127,28 @@ const studentLecture = asyncHandler(async (req, res) => {
 
   // console.log(findStudent);
 
+  const today = new Date();
+  const yesterday = new Date(today);
+  const tomorrow = new Date(today);
+
+  
+  yesterday.setDate(today.getDate() - 1);
+  tomorrow.setDate(today.getDate() + 1);
+
+  // Format the dates to `YYYY-MM-DD`
+  const todayStr = today.toISOString().split("T")[0];
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  const tomorrowStr = tomorrow.toISOString().split("T")[0];
+
   const lecture = await lectures.aggregate([
     {
       $match: {
         board: findStudent.board.toUpperCase().toString(),
         adminName: findStudent.adminName.toString(),
         standard: findStudent.standard.toString(),
-        date:new Date().toISOString().split("T")[0]
+        // date: new Date().toISOString().split("T")[0],
+        date: { $in: [yesterdayStr, todayStr, tomorrowStr] }
+
       },
     },
     {
@@ -158,7 +173,7 @@ const studentLecture = asyncHandler(async (req, res) => {
         description: 1,
         board: 1,
         adminName: 1,
-        date:1
+        date: 1,
       },
     },
   ]);
@@ -190,7 +205,7 @@ const teacherLecture = asyncHandler(async (req, res) => {
         board: {
           $in: findTeacher.hiredForBoard.map((board) => board.toUpperCase()),
         },
-        date:new Date().toISOString().split("T")[0]
+        date: new Date().toISOString().split("T")[0],
       },
     },
     {
@@ -316,7 +331,7 @@ const updateLecture = asyncHandler(async (req, res) => {
     {
       standard: standard,
       time: time,
-      date: new Date().toISOString().split("T")[0]
+      date: new Date().toISOString().split("T")[0],
     },
     { new: true }
   );
@@ -371,8 +386,6 @@ const todayLecture = asyncHandler(async (req, res) => {
 
   return res.status(200).json(new apiResponse(200, findlecture, "data found"));
 });
-
-
 
 export {
   addLectureNotice,
