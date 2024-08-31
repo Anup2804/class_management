@@ -158,6 +158,7 @@ const studentLecture = asyncHandler(async (req, res) => {
         description: 1,
         board: 1,
         adminName: 1,
+        date:1
       },
     },
   ]);
