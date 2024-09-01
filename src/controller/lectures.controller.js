@@ -127,7 +127,15 @@ const studentLecture = asyncHandler(async (req, res) => {
 
   // console.log(findStudent);
 
+  const today = new Date();
+  const tomorrow = new Date(today);
+
   
+  tomorrow.setDate(today.getDate() + 1);
+
+  // Format the dates to `YYYY-MM-DD`
+  const todayStr = today.toISOString().split("T")[0];
+  const tomorrowStr = tomorrow.toISOString().split("T")[0];
 
   const lecture = await lectures.aggregate([
     {
@@ -135,8 +143,8 @@ const studentLecture = asyncHandler(async (req, res) => {
         board: findStudent.board.toUpperCase().toString(),
         adminName: findStudent.adminName.toString(),
         standard: findStudent.standard.toString(),
-        date: new Date().toISOString().split("T")[0],
-        // date: { $in: [ todayStr, tomorrowStr] }
+        // date: new Date().toISOString().split("T")[0],
+        date: { $in: [ todayStr, tomorrowStr] }
 
       },
     },
