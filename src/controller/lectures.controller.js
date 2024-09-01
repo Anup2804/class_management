@@ -132,6 +132,7 @@ const studentLecture = asyncHandler(async (req, res) => {
 
   
   tomorrow.setDate(today.getDate() + 1);
+  
 
   // Format the dates to `YYYY-MM-DD`
   const todayStr = today.toISOString().split("T")[0];
