@@ -7,10 +7,10 @@ import { lectures } from "../model/lecture.model.js";
 import { students } from "../model/students.model.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
-  const { standard, lectureName, time, description, board, TeacherName } =
+  const { standard, lectureName, time, description, board, TeacherName,date } =
     req.body;
 
-  if (!standard && !lectureName && !time && !board && !TeacherName) {
+  if (!standard && !lectureName && !time && !board && !TeacherName && !date) {
     throw new apiError(
       402,
       "standard and lectureName and time and date and board is required."
@@ -46,7 +46,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     lectureName,
     time,
     description,
-    date: new Date().toISOString().split("T")[0],
+    date: new Date(date).toISOString().split("T")[0],
     board,
     adminName: req.admin.adminName,
   });
@@ -128,16 +128,13 @@ const studentLecture = asyncHandler(async (req, res) => {
   // console.log(findStudent);
 
   const today = new Date();
-  const yesterday = new Date(today);
   const tomorrow = new Date(today);
 
   
-  yesterday.setDate(today.getDate() - 1);
   tomorrow.setDate(today.getDate() + 1);
 
   // Format the dates to `YYYY-MM-DD`
   const todayStr = today.toISOString().split("T")[0];
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
   const tomorrowStr = tomorrow.toISOString().split("T")[0];
 
   const lecture = await lectures.aggregate([
@@ -147,7 +144,7 @@ const studentLecture = asyncHandler(async (req, res) => {
         adminName: findStudent.adminName.toString(),
         standard: findStudent.standard.toString(),
         // date: new Date().toISOString().split("T")[0],
-        date: { $in: [yesterdayStr, todayStr, tomorrowStr] }
+        date: { $in: [ todayStr, tomorrowStr] }
 
       },
     },
