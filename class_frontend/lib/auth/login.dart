@@ -28,17 +28,19 @@ class _StudentLoginState extends State<StudentLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
+      child: Stack(children: [
+         Opacity(
+      opacity: 0.5, 
+      child: Image.asset(
+        'assets/images/Teacher.png', 
+        fit: BoxFit.cover, 
+        height: double.infinity,
+        width: double.infinity,
+      ),
+            ),
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-                height: 280,
-                width: 300,
-                child: Image.asset(
-                  'assets/images/Teacher.png',
-                  fit: BoxFit.cover,
-                )),
             Card(
               elevation: 7,
               color: Colors.white,
@@ -62,7 +64,7 @@ class _StudentLoginState extends State<StudentLogin> {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter your email';
                                 }
-
+      
                                 final emailRegex = RegExp(
                                     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
                                 if (!emailRegex.hasMatch(value)) {
@@ -107,11 +109,11 @@ class _StudentLoginState extends State<StudentLogin> {
                                             content: Text(
                                                 'Student login successfully!')),
                                       );
-                                      Future.delayed(const Duration(seconds: 1),
-                                          () {
+                                      Future.delayed(
+                                          const Duration(seconds: 1), () {
                                         Navigator.of(context)
                                             .pushNamed('/home');
-
+      
                                         _formKey.currentState?.reset();
                                       });
                                     } catch (error) {
@@ -124,8 +126,9 @@ class _StudentLoginState extends State<StudentLogin> {
                                 },
                                 child: Text(
                                   'Login',
-                                  style:
-                                      Theme.of(context).textTheme.displayMedium,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium,
                                 )),
                             InkWell(
                                 onTap: () {
@@ -144,10 +147,10 @@ class _StudentLoginState extends State<StudentLogin> {
                       )),
                 ],
               ),
-            )
+            ),
           ],
         ),
-      ),
+      ]),
     ));
   }
 }

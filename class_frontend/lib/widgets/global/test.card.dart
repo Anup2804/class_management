@@ -1,26 +1,22 @@
-import 'package:class_frontend/services/models/lecture.model.dart';
+import 'package:class_frontend/services/models/test.model.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class DataCard extends StatelessWidget {
-  final Lecture lecture;
-  const DataCard(this.lecture, {super.key});
+class TestCard extends StatelessWidget {
+  final Test test;
+  const TestCard( {super.key,required this.test});
 
   @override
   Widget build(BuildContext context) {
-    bool isToday = lecture.date == DateFormat('yyyy-MM-dd').format(DateTime.now());
-    print(DateFormat('yyyy-MM-dd').format(DateTime.now()));
+    bool isToday = test.date == DateTime.now();
+
 
     return Container(
         height: 150,
         width: double.infinity,
         margin: EdgeInsets.all(7),
         decoration: BoxDecoration(
-            color: isToday
-                ? Colors.green.withOpacity(.25)
-                : Colors.yellow.withOpacity(.25),
-            border: Border.all(
-                color: isToday ? Colors.green : Colors.yellow, width: 3),
+            color: isToday ? Colors.green.withOpacity(.25) : Colors.yellow.withOpacity(.25),
+            border: Border.all(color: isToday ? Colors.green : Colors.yellow, width: 3),
             borderRadius: BorderRadius.circular(10)),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -29,10 +25,10 @@ class DataCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Lecture :',
+                    'Subject Name :',
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  Text(lecture.lectureName,
+                  Text(' ${test.subjectName}',
                       style: Theme.of(context).textTheme.displayMedium)
                 ],
               ),
@@ -45,7 +41,7 @@ class DataCard extends StatelessWidget {
                     'Time :',
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  Text(' ${lecture.time}',
+                  Text(' ${test.time}',
                       style: Theme.of(context).textTheme.displayMedium)
                 ],
               ),
@@ -58,7 +54,7 @@ class DataCard extends StatelessWidget {
                     'Standard :',
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  Text(' ${lecture.standard}',
+                  Text(' ${test.standard}',
                       style: Theme.of(context).textTheme.displayMedium)
                 ],
               ),
@@ -71,7 +67,7 @@ class DataCard extends StatelessWidget {
                     'ByTeacher :',
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  Text(' ${lecture.teacherName}',
+                  Text(' ${test.teacherName}',
                       style: Theme.of(context).textTheme.displayMedium)
                 ],
               ),
@@ -84,12 +80,8 @@ class DataCard extends StatelessWidget {
                     'Date :',
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  Text(
-                    ' ${lecture.date}',
-                    style: Theme.of(context).textTheme.displayMedium,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
-                  )
+                  Text(' ${test.date}',
+                      style: Theme.of(context).textTheme.displayMedium,softWrap: true,overflow: TextOverflow.ellipsis, )
                 ],
               )
             ],

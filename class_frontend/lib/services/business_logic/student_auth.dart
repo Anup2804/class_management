@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:class_frontend/services/functions/shared.dart';
 import 'package:http/http.dart' as http;
 import 'package:class_frontend/services/models/auth_model/signup.model.dart';
 
@@ -35,7 +36,7 @@ class StudentRepository {
   Future<void> loginStudent(Student user) async {
     final url = Uri.parse('$_baseUrl/student/login');
     final jsonData = jsonEncode(user.toLoginJson());
-    
+
     print(jsonData);
 
     try {
@@ -49,15 +50,20 @@ class StudentRepository {
 
       if (response.statusCode == 200) {
         print('Login successful');
+
+        final responseBody = json.decode(response.body);
+        await storeLoginData(responseBody);
+        // await retrieveLoginData();
       } else {
         final responseBody = json.decode(response.body);
+
         final errorMessage = responseBody['message'] ?? 'Unable to login';
         print('Unable to login: $errorMessage');
-        throw Exception(errorMessage);
+        throw '$errorMessage';
       }
     } catch (error) {
       print('Error: $error');
-      throw 'Failed to login';
+      throw '$error';
     }
   }
 }
