@@ -5,9 +5,10 @@ import { apiResponse } from "../utils/apiResponse.js";
 import { teachers } from "../model/teachers.model.js";
 import { lectures } from "../model/lecture.model.js";
 import { students } from "../model/students.model.js";
+import { formatDateToLocalISO } from "../utils/function/date.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
-  const { standard, lectureName, time, description, board, TeacherName,date } =
+  const { standard, lectureName, time, description, board, TeacherName, date } =
     req.body;
 
   if (!standard && !lectureName && !time && !board && !TeacherName && !date) {
@@ -40,13 +41,16 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     throw new apiError(405, `can not upload lecture for ${board}`);
   }
 
+  const Dates = formatDateToLocalISO(date);
+
+
   const lecture = await lectures.create({
     byTeacher: getTeacher._id,
     standard,
     lectureName,
     time,
     description,
-    date: new Date(date).toISOString().split("T")[0],
+    date: Dates,
     board,
     adminName: req.admin.adminName,
   });
@@ -103,6 +107,8 @@ const addLectureNotice = asyncHandler(async (req, res) => {
   //   await lectures.findByIdAndDelete(lecture._id);
   // }, 20 * 60 * 60 * 1000);
 
+  
+
   return res
     .status(200)
     .json(
@@ -125,18 +131,16 @@ const studentLecture = asyncHandler(async (req, res) => {
     throw new apiError(402, "user does not exist");
   }
 
-  // console.log(findStudent);
 
   const today = new Date();
   const tomorrow = new Date(today);
 
-  
   tomorrow.setDate(today.getDate() + 1);
-  
 
-  // Format the dates to `YYYY-MM-DD`
   const todayStr = today.toISOString().split("T")[0];
   const tomorrowStr = tomorrow.toISOString().split("T")[0];
+
+  console.log(todayStr);
 
   const lecture = await lectures.aggregate([
     {
@@ -145,8 +149,7 @@ const studentLecture = asyncHandler(async (req, res) => {
         adminName: findStudent.adminName.toString(),
         standard: findStudent.standard.toString(),
         // date: new Date().toISOString().split("T")[0],
-        date: { $in: [ todayStr, tomorrowStr] }
-
+        date: { $in: [todayStr, tomorrowStr] },
       },
     },
     {
