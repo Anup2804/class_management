@@ -133,14 +133,18 @@ const studentLecture = asyncHandler(async (req, res) => {
 
 
   const today = new Date();
+  const realDate = new Date(today);
   const tomorrow = new Date(today);
 
-  tomorrow.setDate(today.getDate() + 1);
+  realDate.setDate(today.getDate() +1)
+  tomorrow.setDate(today.getDate() + 2);
 
-  const todayStr = today.toISOString().split("T")[0];
+  const todayStr = realDate.toISOString().split("T")[0];
   const tomorrowStr = tomorrow.toISOString().split("T")[0];
 
   console.log(todayStr);
+  console.log(realDate);
+  console.log(tomorrowStr);
 
   const lecture = await lectures.aggregate([
     {
