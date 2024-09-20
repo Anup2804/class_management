@@ -53,7 +53,7 @@ const uploadMarks = asyncHandler(async (req, res) => {
     file: uploadFile.url,
     standard,
     description,
-    board,
+    board:board.toUpperCase(),
     adminName: req.teacher.adminName,
   });
 
@@ -114,17 +114,17 @@ const getMarks = asyncHandler(async (req, res) => {
     throw new apiError(402, "student with id not found");
   }
 
-  const markData = await marks.findOne({
+  const markData = await marks.find({
     standard: req.student.standard,
     board: req.student.board,
   });
+  console.log(markData);
   // console.log(req.student.board);
   // console.log(req.student.standard);
 
   const getMark = await marks.aggregate([
     {
       $match: {
-        _id: markData._id,
         adminName: req.student.adminName,
       },
     },

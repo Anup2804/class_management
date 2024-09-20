@@ -84,7 +84,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     password,
     standard,
     schoolName,
-    board,
+    board:board.toUpperCase(),
     phoneNo,
     subjectChosen,
     adminName,

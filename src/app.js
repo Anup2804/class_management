@@ -16,12 +16,12 @@ app.use(
 );
 
 //additonal middleware to work with the header.
-app.use((req, res, next) => {
-  if (req.method === 'POST') {
-    req.headers['content-type'] = 'application/json';
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   if (req.method === 'POST') {
+//     req.headers['content-type'] = 'application/json';
+//   }
+//   next();
+// });
 
 app.use(express.json({extended: true})),
   app.use(express.urlencoded({ extended: true, limit: "1mb" })),
