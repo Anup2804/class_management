@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import cron from "node-cron";
+import { schedulingLectureForToday } from "./controller/timeTable.controller.js";
 
 const app = express();
 
@@ -59,7 +61,8 @@ import testsRouter from "./routes/tests.router.js";
 import notesRouter from "./routes/notes.router.js";
 import marksRouter from "./routes/marks.router.js";
 import adminsRouter from "./routes/admins.router.js";
-// import batchesRouter from ""
+import batchRouter from "./routes/batches.router.js";
+import timeTableRouter from "./routes/timeTable.router.js";
 // intialisation of router
 
 app.use("/api/v1/student", studentsRouter);
@@ -69,6 +72,17 @@ app.use("/api/v1/test", testsRouter);
 app.use("/api/v1/notes", notesRouter);
 app.use("/api/v1/marks", marksRouter);
 app.use("/api/v1/admins", adminsRouter);
-// app.use('/api/v1/batches',)
+app.use('/api/v1/batches',batchRouter);
+app.use('/api/v1/timetable',timeTableRouter);
+
+
+// Run the schedule function when the app starts
+// schedulingLectureForToday();
+
+// Schedule the lecture function to run daily at midnight (00:00)
+cron.schedule('0 0 * * *', () => {
+  console.log("Running automated lecture scheduling...");
+  schedulingLectureForToday();
+});
 
 export { app };

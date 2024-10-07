@@ -26,13 +26,6 @@ const studentRegister = asyncHandler(async (req, res) => {
   // validate the user input.
   // find user exist or not in the database.
   // if user not exist create the user.
-
-  if (req.headers['content-type'] !== 'application/json') {
-    return res.status(400).json({
-      status: 'error',
-      message: 'Content-Type must be application/json',
-    });
-  }
   
   const {
     fullName,
@@ -43,7 +36,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     phoneNo,
     subjectChosen,
     board,
-    adminName,
+    adminEmail,
   } = req.body;
 
   if (!email || !password) {
@@ -57,7 +50,7 @@ const studentRegister = asyncHandler(async (req, res) => {
     !phoneNo &&
     !subjectChosen &&
     !board &&
-    !adminName
+    !adminEmail
   ) {
     throw new apiError(402, "all fields with star mark are required.");
   }
@@ -69,7 +62,7 @@ const studentRegister = asyncHandler(async (req, res) => {
   }
 
   const getAdmin = await admins.findOne({
-    adminName: adminName.trim().toLowerCase(),
+    email: adminEmail,
   });
 
   if (!getAdmin) {
@@ -84,10 +77,10 @@ const studentRegister = asyncHandler(async (req, res) => {
     password,
     standard,
     schoolName,
-    board:board.toUpperCase(),
+    board:board.trim().toUpperCase(),
     phoneNo,
     subjectChosen,
-    adminName,
+    adminEmail,
   });
 
   const student = await students

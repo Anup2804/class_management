@@ -1,5 +1,20 @@
 import mongoose, { Schema } from "mongoose";
 
+const attendenceSchema = new mongoose.Schema(
+  {
+      studentId:{
+          type: String,
+          required:true
+      },
+      isPresent:{
+          type:String,
+          required:true
+      }
+
+  }
+);
+
+
 const batchesSchema = new mongoose.Schema(
   {
     lectureId: {
@@ -13,30 +28,34 @@ const batchesSchema = new mongoose.Schema(
       lowercase: true,
       required: true,
     },
+    studentData:{
+      type: [attendenceSchema],
+      required:true
+    },
     date: {
       type: Date,
-      required: true,
+      // required: true,
     },
     inTime: {
       type: Date,
-      required: true,
+      // required: true,
     },
     inLocation: {
       type: {
         latitude: {
           type: Number,
-          required: true,
+          // required: true,
           min: -90,
           max: 90,
         },
         longitude: {
           type: Number,
-          required: true,
+          // required: true,
           min: -180,
           max: 180,
         },
       },
-      required: true,
+      // required: true,
     },
     outTime: {
       type: Date,
@@ -58,8 +77,8 @@ const batchesSchema = new mongoose.Schema(
       },
     },
     byTeacher: {
-      type: mongoose.Types.ObjectId,
-      ref: "teachers",
+      type: String,
+      required:true
     },
   },
   { timestamps: true }

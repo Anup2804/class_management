@@ -77,7 +77,7 @@ adminSchema.methods.generateRefreshToken = function () {
     {
       _id: this._id,
       // fullName: this.fullName,
-      // email: this.email,
+      email: this.email,
     },
     process.env.REFRESH_TOKEN_SECRET,
     {

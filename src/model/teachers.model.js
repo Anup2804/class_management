@@ -12,10 +12,9 @@ const teacherSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    adminName:{
+    adminEmail:{
       type: String,
       required:true,
-      lowercase:true,
       trim:true
     },
     qualification: {

@@ -5,6 +5,7 @@ import { apiResponse } from "../utils/apiResponse.js";
 import { teachers } from "../model/teachers.model.js";
 import { testNotices } from "../model/tests.model.js";
 import { students } from "../model/students.model.js";
+import { formatDateToLocalISO } from "../utils/function/date.js";
 
 const uploadTestNotice = asyncHandler(async (req, res) => {
   const { subjectName, standard, chapterNo, time, description, board, date } =
@@ -35,7 +36,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
 
   const test = await testNotices.create({
     byTeacher: req.teacher._id,
-    adminName: req.teacher.adminName,
+    adminEmail: req.teacher.adminEmail,
     subjectName,
     standard,
     chapterNo,
@@ -80,7 +81,7 @@ const uploadTestNotice = asyncHandler(async (req, res) => {
         time: 1,
         description: 1,
         board: 1,
-        adminName: 1,
+        adminEmail: 1,
         date: 1,
       },
     },
@@ -112,12 +113,21 @@ const getTestNotice = asyncHandler(async (req, res) => {
     throw new apiError(402, "user does not exist");
   }
 
+  const today = new Date();
+
+  const realDate = new Date(today);
+  realDate.setDate(today.getDate());
+  const todayStr = formatDateToLocalISO(realDate).toString();
+
+  console.log(todayStr);
+
   const test = await testNotices.aggregate([
     {
       $match: {
-        standard: findStudent.standard.toString(),
-        board: findStudent.board.toUpperCase().toString(),
-        adminName: findStudent.adminName.toString(),
+        standard: findStudent.standard,
+        board: findStudent.board,
+        adminEmail: findStudent.adminEmail,
+        date: { $gte: todayStr }
       },
     },
     {
@@ -146,7 +156,7 @@ const getTestNotice = asyncHandler(async (req, res) => {
         time: 1,
         description: 1,
         board: 1,
-        adminName: 1,
+        adminEmail: 1,
         date:1,
       },
     },
@@ -165,7 +175,7 @@ const getAllTest = asyncHandler(async(req,res)=>{
   }
 
   const getAll = await testNotices.find({
-    adminName:req.admin.adminName
+    adminEmail:req.admin.email
   })
 
   if(!getAll){
@@ -180,9 +190,17 @@ const todayTest = asyncHandler(async(req,res)=>{
     throw new apiError(402,'invalid admin')
   }
 
+  const today = new Date();
+
+  const realDate = new Date(today);
+  realDate.setDate(today.getDate());
+  const todayStr = formatDateToLocalISO(realDate).toString();
+
+  console.log(today);
+
   const todayTest = await testNotices.find({
-    date:new Date().toISOString().split("T")[0],
-    adminName:req.admin.adminName
+    date:todayStr,
+    adminEmail:req.admin.email
   })
 
   if(!todayTest){

@@ -7,10 +7,9 @@ const testNoticeSchema = new mongoose.Schema(
       ref: "teachers",
       required: true,
     },
-    adminName: {
+    adminEmail: {
       type: String,
       trim: true,
-      lowercase: true,
       required: true,
     },
     subjectName: {

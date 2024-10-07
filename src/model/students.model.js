@@ -6,11 +6,7 @@ import { apiError } from "../utils/apiError.js";
 
 dotenv.config();
 
-const subjectChosen = new mongoose.Schema({
-  subjectName: {
-    type: String,
-  },
-});
+
 
 const studentSchema = new mongoose.Schema(
   {
@@ -19,9 +15,8 @@ const studentSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    adminName: {
+    adminEmail: {
       type: String,
-      lowercase: true,
       required: true,
       trim: true,
     },

@@ -27,10 +27,10 @@ const adminRegister = asyncHandler(async (req, res) => {
     throw new apiError(402, "name ,email or password is required.");
   }
 
-  const adminData = await admins.findOne({ name: name });
+  const adminData = await admins.findOne({ email: email });
 
   if (adminData) {
-    throw new apiError(405, "admin with this name already exist.");
+    throw new apiError(405, "admin with this email already exist.");
   }
 
   const admin = await admins.create({

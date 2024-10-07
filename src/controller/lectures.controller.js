@@ -8,10 +8,10 @@ import { students } from "../model/students.model.js";
 import { formatDateToLocalISO } from "../utils/function/date.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
-  const { standard, lectureName, time, description, board, TeacherName, date } =
+  const { standard, lectureName, time, description, board, teacherName, date } =
     req.body;
 
-  if (!standard && !lectureName && !time && !board && !TeacherName && !date) {
+  if (!standard && !lectureName && !time && !board && !teacherName && !date) {
     throw new apiError(
       402,
       "standard and lectureName and time and date and board is required."
@@ -29,20 +29,22 @@ const addLectureNotice = asyncHandler(async (req, res) => {
   console.log(req.admin);
 
   const getTeacher = await teachers.findOne({
-    fullName: TeacherName,
-    adminName: req.admin.adminName,
+    fullName: teacherName,
+    adminEmail: req.admin.email,
   });
 
   if (!getTeacher) {
-    throw new apiError(402, "teacher with given id not found.");
+    throw new apiError(402, "teacher with given name not found.");
   }
 
   if (!getTeacher.hiredForBoard.includes(board.toUpperCase())) {
     throw new apiError(405, `can not upload lecture for ${board}`);
   }
 
-  const Dates = formatDateToLocalISO(date);
-
+  const formattedDate = (() => {
+    const [day, month, year] = date.split("/");
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  })();
 
   const lecture = await lectures.create({
     byTeacher: getTeacher._id,
@@ -50,9 +52,9 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     lectureName,
     time,
     description,
-    date: Dates,
-    board,
-    adminName: req.admin.adminName,
+    date: formattedDate,
+    board: board.trim().toUpperCase(),
+    adminEmail: req.admin.email,
   });
 
   const getlecture = await lectures.findById(lecture._id);
@@ -92,7 +94,7 @@ const addLectureNotice = asyncHandler(async (req, res) => {
         description: 1,
         date: 1,
         board: 1,
-        adminName: 1,
+        adminEmail: 1,
       },
     },
   ]);
@@ -106,8 +108,6 @@ const addLectureNotice = asyncHandler(async (req, res) => {
   // setTimeout(async () => {
   //   await lectures.findByIdAndDelete(lecture._id);
   // }, 20 * 60 * 60 * 1000);
-
-  
 
   return res
     .status(200)
@@ -131,28 +131,90 @@ const studentLecture = asyncHandler(async (req, res) => {
     throw new apiError(402, "user does not exist");
   }
 
-
   const today = new Date();
   const realDate = new Date(today);
   const tomorrow = new Date(today);
 
-  realDate.setDate(today.getDate() +1)
-  tomorrow.setDate(today.getDate() + 2);
+  realDate.setDate(today.getDate());
+  tomorrow.setDate(today.getDate() + 1);
 
-  const todayStr = realDate.toISOString().split("T")[0];
-  const tomorrowStr = tomorrow.toISOString().split("T")[0];
+  const todayStr = formatDateToLocalISO(realDate).toString();
+  const tomorrowStr = formatDateToLocalISO(tomorrow).toString();
 
   console.log(todayStr);
-  console.log(realDate);
   console.log(tomorrowStr);
 
   const lecture = await lectures.aggregate([
     {
       $match: {
-        board: findStudent.board.toUpperCase().toString(),
-        adminName: findStudent.adminName.toString(),
+        board: findStudent.board.toString(),
+        adminEmail: findStudent.adminEmail.toString(),
         standard: findStudent.standard.toString(),
-        // date: new Date().toISOString().split("T")[0],
+        date: { $in: [todayStr, tomorrowStr] },
+      },
+    },
+    {
+      $lookup: {
+        from: "teachers",
+        localField: "byTeacher",
+        foreignField: "_id",
+        as: "teacherDetails",
+      },
+    },
+    { $unwind: "$teacherDetails" },
+    {
+      $project: {
+        _id: 1,
+        standard: 1,
+        lectureName: 1,
+        byTeacher: {
+          _id: "$teacherDetails._id",
+          name: "$teacherDetails.fullName",
+        },
+        time: 1,
+        description: 1,
+        board: 1,
+        date: 1,
+      },
+    },
+  ]);
+
+  if (!lecture.length) {
+    throw new apiError(500, "no lecture found");
+  }
+
+  return res.status(200).json(new apiResponse(200, lecture, "lecture found"));
+});
+
+const teacherLecture = asyncHandler(async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.teacher._id)) {
+    throw new apiError(401, "invalid user");
+  }
+
+  const findTeacher = await teachers.findById(req.teacher._id);
+
+  if (!findTeacher) {
+    throw new apiError(402, "user does not exist");
+  }
+
+  const today = new Date();
+  const realDate = new Date(today);
+  const tomorrow = new Date(today);
+
+  realDate.setDate(today.getDate());
+  tomorrow.setDate(today.getDate() + 1);
+
+  const todayStr = formatDateToLocalISO(realDate).toString();
+  const tomorrowStr = formatDateToLocalISO(tomorrow).toString();
+
+  const lecture = await lectures.aggregate([
+    {
+      $match: {
+        adminEmail: findTeacher.adminEmail,
+        board: {
+          $in: findTeacher.hiredForBoard.map((board) => board.toUpperCase()),
+        },
+        byTeacher: findTeacher._id,
         date: { $in: [todayStr, tomorrowStr] },
       },
     },
@@ -178,7 +240,7 @@ const studentLecture = asyncHandler(async (req, res) => {
         description: 1,
         board: 1,
         adminName: 1,
-        date: 1,
+        date:1
       },
     },
   ]);
@@ -188,62 +250,6 @@ const studentLecture = asyncHandler(async (req, res) => {
   }
 
   return res.status(200).json(new apiResponse(200, lecture, "lecture found"));
-});
-
-const teacherLecture = asyncHandler(async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.teacher._id)) {
-    throw new apiError(401, "invalid user");
-  }
-
-  const findTeacher = await teachers.findById(req.teacher._id);
-
-  if (!findTeacher) {
-    throw new apiError(402, "user does not exist");
-  }
-
-  // console.log(findStudent);
-
-  const lectures = await lectures.aggregate([
-    {
-      $match: {
-        adminName: findTeacher.adminName.toString(),
-        board: {
-          $in: findTeacher.hiredForBoard.map((board) => board.toUpperCase()),
-        },
-        date: new Date().toISOString().split("T")[0],
-      },
-    },
-    {
-      $lookup: {
-        from: "teachers",
-        localField: "byTeacher",
-        foreignField: "_id",
-        as: "teacherDetails",
-      },
-    },
-    { $unwind: "$teacherDetails" },
-    {
-      $project: {
-        _id: 1,
-        standard: 1,
-        lectureName: 1,
-        byTeacher: {
-          _id: "$teacherDetails._id",
-          name: "$teacherDetails.fullName",
-        },
-        time: 1,
-        description: 1,
-        board: 1,
-        adminName: 1,
-      },
-    },
-  ]);
-
-  if (!lectures.length) {
-    throw new apiError(500, "no lecture found");
-  }
-
-  return res.status(200).json(new apiResponse(200, lectures, "lecture found"));
 });
 
 const standardLecture = asyncHandler(async (req, res) => {
@@ -324,7 +330,7 @@ const updateLecture = asyncHandler(async (req, res) => {
 
   const getlecture = await lectures.findOne({
     _id: new mongoose.Types.ObjectId(lectureId),
-    adminName: req.admin.adminName.toString(),
+    adminEmail: req.admin.email.toString(),
   });
 
   if (!getlecture) {
@@ -336,7 +342,7 @@ const updateLecture = asyncHandler(async (req, res) => {
     {
       standard: standard,
       time: time,
-      date: new Date().toISOString().split("T")[0],
+      
     },
     { new: true }
   );
@@ -359,7 +365,7 @@ const deleteLecture = asyncHandler(async (req, res) => {
 
   const getLecture = await lectures.findOne({
     _id: lectureId,
-    adminName: req.admin.adminName,
+    adminEmail: req.admin.email,
   });
 
   if (!getLecture) {
@@ -380,9 +386,15 @@ const todayLecture = asyncHandler(async (req, res) => {
     throw new apiError(402, "invalid token");
   }
 
+  const today = new Date();
+
+  const realDate = new Date(today);
+  realDate.setDate(today.getDate());
+  const todayStr = formatDateToLocalISO(realDate).toString();
+
   const findlecture = await lectures.find({
-    date: new Date().toISOString().split("T")[0],
-    adminName: req.admin.adminName,
+    date: todayStr,
+    adminEmail: req.admin.email,
   });
 
   if (!findlecture) {

@@ -31,10 +31,10 @@ const teacherRegister = asyncHandler(async (req, res) => {
     hiredForStandard,
     hiredForBoard,
     staff,
-    adminName
+    adminEmail
   } = req.body;
 
-  if (!fullName && !email && !password && !adminName) {
+  if (!fullName && !email && !password && !adminEmail) {
     throw new apiError(402, "name , email and password are required.");
   }
 
@@ -51,12 +51,16 @@ const teacherRegister = asyncHandler(async (req, res) => {
   }
 
   const getAdmin = await admins.findOne({
-    adminName: adminName.trim().toLowerCase(),
+    email: adminEmail,
   });
 
   if (!getAdmin) {
-    throw new apiError(402, "admin name is incorrect");
+    throw new apiError(402, "admin email is incorrect");
   }
+
+  const upperCaseHiredForBoard = Array.isArray(hiredForBoard)
+    ? hiredForBoard.map(board => board.trim().toUpperCase())
+    : [hiredForBoard.trim().toUpperCase()];
   
   const teacher = await teachers.create({
     fullName,
@@ -65,9 +69,9 @@ const teacherRegister = asyncHandler(async (req, res) => {
     qulification: qulification,
     hiredForStandard,
     hiredForSubject,
-    hiredForBoard,
+    hiredForBoard: upperCaseHiredForBoard,
     staff,
-    adminName
+    adminEmail
     // hiredForStandard:Array.isArray(hiredForStandard) ? hiredForStandard: [hiredForStandard],
     // hiredForSubject:Array.isArray(hiredForSubject) ? hiredForSubject : [hiredForSubject]
   });
@@ -82,14 +86,14 @@ const teacherRegister = asyncHandler(async (req, res) => {
 });
 
 const teacherLogin = asyncHandler(async (req, res) => {
-  const { email, fullName, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!email && !password && !fullName) {
+  if (!email && !password) {
     throw new apiError(402, "email,password and fullName is required");
   }
 
   const getTeacher = await teachers.findOne({
-    $and: [{ email }, { fullName }],
+    $and: [{ email }],
   });
 
   if (!getTeacher) {
