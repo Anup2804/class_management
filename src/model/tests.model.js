@@ -43,4 +43,4 @@ const testNoticeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const testNotices = new mongoose.model("testNotices", testNoticeSchema);
+export const testNotices = new mongoose.model("tests", testNoticeSchema);

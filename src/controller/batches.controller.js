@@ -52,10 +52,7 @@ student.forEach((students) => {
     byTeacher: req.teacher.fullName,
   });
 
-  return res.status(201).json({
-    message: "Batch added successfully",
-    batch: newBatch,
-  });
+  return res.status(201).apiResponse(200, "Batch added successfully",newBatch,)
 });
 
 export { AddBatches };
