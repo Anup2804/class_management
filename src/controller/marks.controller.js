@@ -6,7 +6,6 @@ import { apiResponse } from "../utils/apiResponse.js";
 import { marks } from "../model/marks.model.js";
 import { teachers } from "../model/teachers.model.js";
 import { students } from "../model/students.model.js";
-import { response } from "express";
 
 const uploadMarks = asyncHandler(async (req, res) => {
   const { subjectName, chapterNo, standard, description, board } = req.body;
@@ -54,7 +53,7 @@ const uploadMarks = asyncHandler(async (req, res) => {
     standard,
     description,
     board:board.toUpperCase(),
-    adminName: req.teacher.adminName,
+    adminEmail: req.teacher.adminEmail,
   });
 
   if (!mark) {
@@ -155,7 +154,7 @@ const getMarks = asyncHandler(async (req, res) => {
         file: 1,
         description: 1,
         board: 1,
-        adminName: 1,
+        adminEmail: 1,
       },
     },
   ]);
@@ -176,7 +175,7 @@ const delMarks = asyncHandler(async(req,res)=>{
 
   const findMarks = await marks.findOneAndDelete(
     {_id:MarksId,
-      adminName:req.admin.adminName.toString()
+      adminEmail:req.admin.email.toString()
     });
 
   if(!findMarks){
@@ -192,7 +191,7 @@ const getAllMarks = asyncHandler(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
     throw new apiError(402, "invalid id");
   }
-  const getmarks = await marks.find({ adminName: req.admin.adminName.toString() });
+  const getmarks = await marks.find({ adminEmail: req.admin.email.toString() });
 
   if (!getmarks) {
     throw new apiError(402, "not data found.");

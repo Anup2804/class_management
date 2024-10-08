@@ -39,7 +39,7 @@ const uploadNotes = asyncHandler(async (req, res) => {
   }
 
   const noteFile = await notes.create({
-    adminName: req.teacher.adminName,
+    adminEmail: req.teacher.adminEmail,
     byTeacher: req.teacher._id,
     subjectName,
     chapterNo,
@@ -78,7 +78,7 @@ const uploadNotes = asyncHandler(async (req, res) => {
         standard: 1,
         subjectName: 1,
         notes: 1,
-        adminName: 1,
+        adminEmail: 1,
       },
     },
   ]);
@@ -111,7 +111,7 @@ const getNotes = asyncHandler(async (req, res) => {
       $match: {
         standard: findStudent.standard.toString(),
         board: findStudent.board.toString(),
-        adminName: findStudent.adminName.toString(),
+        adminEmail: findStudent.adminEmail.toString(),
       },
     },
     {
@@ -136,7 +136,7 @@ const getNotes = asyncHandler(async (req, res) => {
         standard: 1,
         subjectName: 1,
         notes: 1,
-        adminName:1
+        adminEmail:1
       },
     },
   ]);
