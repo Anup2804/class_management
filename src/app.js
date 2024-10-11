@@ -19,13 +19,13 @@ app.use(
 
 //additonal middleware to work with the header.
 app.use((req, res, next) => {
-  if (req.method === 'POST') {
-    req.headers['content-type'] = 'application/json';
+  if (req.method === "POST") {
+    req.headers["content-type"] = "application/json";
   }
   next();
 });
 
-app.use(express.json({extended: true})),
+app.use(express.json()),
   app.use(express.urlencoded({ extended: true, limit: "1mb" })),
   app.use(express.static("public")),
   app.use(cookieParser());
@@ -72,17 +72,22 @@ app.use("/api/v1/test", testsRouter);
 app.use("/api/v1/notes", notesRouter);
 app.use("/api/v1/marks", marksRouter);
 app.use("/api/v1/admins", adminsRouter);
-app.use('/api/v1/batches',batchRouter);
-app.use('/api/v1/timetable',timeTableRouter);
-
+app.use("/api/v1/batches", batchRouter);
+app.use("/api/v1/timetable", timeTableRouter);
 
 // Run the schedule function when the app starts
 // schedulingLectureForToday();
 
 // Schedule the lecture function to run daily at midnight (00:00)
-cron.schedule('0 0 * * *', () => {
+cron.schedule("0 0 * * *", async () => {
   console.log("Running automated lecture scheduling...");
-  schedulingLectureForToday();
+  const currentDate = new Date();
+  console.log(`Running scheduled task at: ${currentDate.toLocaleString()}`);
+  try {
+    await schedulingLectureForToday();
+  } catch {
+    console.error("Error in scheduled task:", error);
+  }
 });
 
 export { app };
