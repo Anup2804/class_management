@@ -1,9 +1,8 @@
-import 'dart:ui';
-
 import 'package:class_frontend/auth/login.dart';
 import 'package:class_frontend/auth/signup.dart';
 import 'package:class_frontend/pages/otherPages/home.dart';
 import 'package:class_frontend/pages/otherPages/lecture.dart';
+import 'package:class_frontend/pages/otherPages/marks.dart';
 import 'package:class_frontend/pages/otherPages/test.dart';
 import 'package:class_frontend/services/business_logic/student_auth.dart';
 import 'package:class_frontend/services/provider/lecture.provider.dart';
@@ -59,7 +58,8 @@ class MyApp extends StatelessWidget {
           '/signup': (context) => SignUp(),
           '/home': (context) => HomeScreen(),
           '/lecture': (context) => LectureScreen(),
-          '/test': (context) => TestScreen()
+          '/test': (context) => TestScreen(),
+          '/marks': (context) => MarksPage()
         },
       ),
     );

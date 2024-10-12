@@ -34,7 +34,7 @@ class HomeGrid extends StatelessWidget {
           scale: 9,
           title: 'Marks',
           onTap: () {
-            print('marks');
+            Navigator.of(context).pushNamed('/marks');
           }),
       CustomIcon(
           imgurl: 'assets/icons/pay.png',
