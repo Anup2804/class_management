@@ -72,6 +72,7 @@ flutter:
     - assets/icons/notes.png
     - assets/icons/exam.png
     - assets/icons/pay.png
+    - assets/images/main_logo.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
