@@ -1,12 +1,22 @@
-import 'package:class_frontend/Constants/fonts.dart';
+import 'package:class_frontend/Models/Admin/admin_model.dart';
+import 'package:class_frontend/Models/Student/student_model.dart';
+import 'package:class_frontend/Models/Teacher/teacher_model.dart';
+import 'package:class_frontend/Services/Providers/admin_provider.dart';
+import 'package:class_frontend/Services/Providers/student_provider.dart';
+import 'package:class_frontend/Services/Providers/teacher_provider.dart';
 import 'package:flutter/material.dart';
+
+import 'package:class_frontend/Constants/fonts.dart';
+import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
   final String targetPath;
+  final String type;
 
   const LoginForm({
     super.key,
     required this.targetPath,
+    required this.type,
   });
 
   @override
@@ -29,6 +39,78 @@ class _LoginFormState extends State<LoginForm> {
     _email.dispose();
     _password.dispose();
     super.dispose();
+  }
+
+  Future<void> _onSubmitStudent() async {
+    print(_email.text.trim);
+    final StudentDetails students = StudentDetails(
+      fullName: '',
+      adminEmail: '',
+      password: _password.text.trim(),
+      email: _email.text.trim(),
+      standard: '',
+      schoolName: '',
+      board: '',
+      phoneNo: '',
+      subjectChosen: [],
+    );
+    try {
+      await Provider.of<StudentProvider>(context, listen: false)
+          .studentLogin(students);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Student login successfully!')),
+      );
+      Navigator.pushNamed(context, widget.targetPath);
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(' $error')),
+      );
+    }
+  }
+
+  Future<void> _onSubmitTeacher() async {
+    print(_email.text.trim);
+    final TeacherDetails teachers = TeacherDetails(
+        fullName: '',
+        adminEmail: '',
+        email: _email.text.trim(),
+        password: _password.text.trim(),
+        hiredForSubject: [],
+        hiredForStandard: [],
+        hiredForBoard: [],
+        staff: '');
+    try {
+      await Provider.of<TeacherProvider>(context, listen: false)
+          .teacherLogin(teachers);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Teacher login successfully!')),
+      );
+      Navigator.pushNamed(context, widget.targetPath);
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(' $error')),
+      );
+    }
+  }
+
+  Future<void> _onSubmitAdmin() async {
+    print(_email.text.trim);
+    final AdminDetails admins = AdminDetails(
+        adminName: '',
+        email: _email.text.trim(),
+        password: _password.text.trim());
+    try {
+      await Provider.of<AdminProvider>(context, listen: false)
+          .adminLogin(admins);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Teacher login successfully!')),
+      );
+      Navigator.pushNamed(context, widget.targetPath);
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(' $error')),
+      );
+    }
   }
 
   @override
@@ -147,10 +229,14 @@ class _LoginFormState extends State<LoginForm> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Form successfully submitted')),
-                      );
-                      Navigator.pushNamed(context, widget.targetPath);
+                      if (widget.type == 'student') {
+                        _onSubmitStudent();
+                      } else if (widget.type == 'teacher') {
+                        _onSubmitTeacher();
+                      } else if (widget.type == 'admin') {
+                        _onSubmitAdmin();
+                        print('admin login');
+                      }
                     }
                   },
                   child: Text('Submit'),

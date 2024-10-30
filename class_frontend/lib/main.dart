@@ -1,5 +1,11 @@
 import 'package:class_frontend/Constants/colors.dart';
 import 'package:class_frontend/Constants/fonts.dart';
+import 'package:class_frontend/Services/Business%20Logic/admin_logic.dart';
+import 'package:class_frontend/Services/Business%20Logic/teacher_logic.dart';
+import 'package:class_frontend/Services/Providers/admin_provider.dart';
+import 'package:class_frontend/Services/Providers/student_provider.dart';
+import 'package:class_frontend/Services/Business Logic/student_logic.dart';
+import 'package:class_frontend/Services/Providers/teacher_provider.dart';
 import 'package:class_frontend/Views/main_Screens/Admin/admin_home_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Admin/admin_login_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Student/student_home_screen.dart';
@@ -12,9 +18,14 @@ import 'package:class_frontend/Views/main_Screens/Teacher/teacher_home_screen.da
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_login_screen.dart';
 import 'package:class_frontend/selection.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => StudentProvider(StudentRepo())),
+    ChangeNotifierProvider(create: (_) => TeacherProvider(TeacherRepo())),
+    ChangeNotifierProvider(create: (_) => AdminProvider(AdminRepo()))
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -34,6 +45,7 @@ class MyApp extends StatelessWidget {
             headlineMedium: mediumHeadline,
           ),
           scaffoldBackgroundColor: backgroudColor),
+      // home: DataForm(),
       routes: {
         "/": (context) => SelectionPage(),
         "/admin/login": (context) => AdminLogin(),

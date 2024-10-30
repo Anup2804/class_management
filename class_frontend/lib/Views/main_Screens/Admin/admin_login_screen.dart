@@ -1,5 +1,5 @@
 import 'package:class_frontend/Views/common_Widgets/card.dart';
-import 'package:class_frontend/Views/common_Widgets/loginForm.dart';
+import 'package:class_frontend/Views/common_Widgets/login_form.dart';
 import 'package:flutter/material.dart';
 
 class AdminLogin extends StatelessWidget {
@@ -13,7 +13,7 @@ class AdminLogin extends StatelessWidget {
           child: CommonCard(
             width: double.infinity,
             height: 250,
-            content: LoginForm(targetPath: '/admin/home',)
+            content: LoginForm(targetPath: '/admin/home',type: 'admin',)
           ),
         ));
   }

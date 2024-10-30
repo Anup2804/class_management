@@ -17,7 +17,8 @@ class DisplayCard extends StatelessWidget {
     required this.time,
     required this.description,
     this.colors1,
-    this.colors2, required this.byTeacher,
+    this.colors2, 
+    required this.byTeacher,
   });
 
   @override
@@ -59,7 +60,7 @@ class DisplayCard extends StatelessWidget {
                     ],
                   ),
                   Icon(
-                    Icons.access_time,
+                    Icons.circle,
                     color: Colors.green,
                     size: 24,
                   ),
