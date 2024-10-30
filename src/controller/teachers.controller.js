@@ -92,9 +92,8 @@ const teacherLogin = asyncHandler(async (req, res) => {
     throw new apiError(402, "email,password and fullName is required");
   }
 
-  const getTeacher = await teachers.findOne({
-    $and: [{ email }],
-  });
+  const getTeacher = await teachers.findOne({ email });
+
 
   if (!getTeacher) {
     throw new apiError(500, "user with this email does not exist.");

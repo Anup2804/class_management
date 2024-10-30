@@ -46,14 +46,14 @@ const addTimeTable = asyncHandler(async (req, res) => {
     for (let j = 0; j < day.lectures.length; j++) {
       const lecture = day.lectures[j];
 
-      console.log(lecture);
+      // console.log(lecture);
 
       const teacher = await teachers.findOne({
         fullName: lecture.teacherName, 
         adminEmail: adminEmail, 
       });
 
-      console.log(teacher);
+      // console.log(teacher);
 
       if (!teacher) {
         throw new apiError(404, `Teacher ${lecture.teachetName} not found.`);
