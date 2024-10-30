@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { Timetable } from "../model/timetable.model.js";
+import { Timetable } from "../model/timeTable.model.js";
 import { apiError } from "../utils/apiError.js";
 import { teachers } from "../model/teachers.model.js";
 import { apiResponse } from "../utils/apiResponse.js";
