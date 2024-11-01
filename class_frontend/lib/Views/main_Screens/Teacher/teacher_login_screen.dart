@@ -8,13 +8,26 @@ class TeacherLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        
-        body: Center(
-          child: CommonCard(
+      resizeToAvoidBottomInset: false,
+        body: Stack(children: [
+      // Positioned.fill(
+      //   child: Opacity(
+      //     opacity: 0.87,
+      //     child: Image.asset(
+      //       'assets/images/background_teacher.jpeg',
+      //       fit: BoxFit.fill,
+      //     ),
+      //   ),
+      // ),
+      Center(
+        child: CommonCard(
             width: double.infinity,
             height: 250,
-            content: LoginForm(targetPath: '/teacher/home',type: 'teacher',)
-          ),
-        ));
+            content: LoginForm(
+              targetPath: '/teacher/home',
+              type: 'teacher',
+            )),
+      ),
+    ]));
   }
 }

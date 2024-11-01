@@ -73,6 +73,9 @@ flutter:
     - assets/icons/exam.png
     - assets/icons/pay.png
     - assets/images/main_logo.jpeg
+    - assets/images/background_student.webp
+    # - assets/images/*
+    - assets/images/background_teacher.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

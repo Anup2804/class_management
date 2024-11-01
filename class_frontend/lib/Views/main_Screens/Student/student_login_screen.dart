@@ -8,13 +8,29 @@ class StudentLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        
-        body: Center(
-          child: CommonCard(
-            width: double.infinity,
-            height: 250,
-            content: LoginForm(targetPath: '/student/home',type: 'student',)
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children:[ 
+
+            Positioned.fill(
+            child: Opacity(
+               opacity: 0.87,
+              child: Image.asset(
+                'assets/images/background_student.webp',
+              
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-        ));
+            
+            Center(
+            child: CommonCard(
+              width: double.infinity,
+              height: 250,
+              content: LoginForm(targetPath: '/student/home',type: 'student',)
+            ),
+          ),]
+        ),
+        );
   }
 }

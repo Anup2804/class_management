@@ -6,6 +6,7 @@ import 'package:class_frontend/Services/Providers/admin_provider.dart';
 import 'package:class_frontend/Services/Providers/student_provider.dart';
 import 'package:class_frontend/Services/Business Logic/student_logic.dart';
 import 'package:class_frontend/Services/Providers/teacher_provider.dart';
+import 'package:class_frontend/Views/common_Widgets/form.dart';
 import 'package:class_frontend/Views/main_Screens/Admin/admin_home_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Admin/admin_login_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Student/student_home_screen.dart';
@@ -16,6 +17,7 @@ import 'package:class_frontend/Views/main_Screens/Student/student_notes_screen.d
 import 'package:class_frontend/Views/main_Screens/Student/student_test_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_home_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_login_screen.dart';
+import 'package:class_frontend/Views/main_Screens/Teacher/teacher_upload_test.dart';
 import 'package:class_frontend/selection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +26,7 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => StudentProvider(StudentRepo())),
     ChangeNotifierProvider(create: (_) => TeacherProvider(TeacherRepo())),
-    ChangeNotifierProvider(create: (_) => AdminProvider(AdminRepo()))
+    ChangeNotifierProvider(create: (_) => AdminProvider(AdminRepo())),
   ], child: const MyApp()));
 }
 
@@ -52,6 +54,7 @@ class MyApp extends StatelessWidget {
         "/admin/home": (context) => AdminHome(),
         "/teacher/login": (context) => TeacherLogin(),
         "/teacher/home": (context) => TeacherHome(),
+        "/teacher/upload/test":(context) => UploadTest(),
         "/student/login": (context) => StudentLogin(),
         "/student/home": (context) => StudentHome(),
         "/student/home/lecture": (context) => StudentLecture(),

@@ -1,6 +1,6 @@
-import 'package:class_frontend/Models/Admin/admin_model.dart';
-import 'package:class_frontend/Models/Student/student_model.dart';
-import 'package:class_frontend/Models/Teacher/teacher_model.dart';
+import 'package:class_frontend/Models/admin_model.dart';
+import 'package:class_frontend/Models/student_model.dart';
+import 'package:class_frontend/Models/teacher_model.dart';
 import 'package:class_frontend/Services/Providers/admin_provider.dart';
 import 'package:class_frontend/Services/Providers/student_provider.dart';
 import 'package:class_frontend/Services/Providers/teacher_provider.dart';

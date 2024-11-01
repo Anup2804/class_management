@@ -1,4 +1,4 @@
-import 'package:class_frontend/Models/Student/student_model.dart';
+import 'package:class_frontend/Models/student_model.dart';
 import 'package:class_frontend/Services/Business%20Logic/student_logic.dart';
 import 'package:flutter/material.dart';
 

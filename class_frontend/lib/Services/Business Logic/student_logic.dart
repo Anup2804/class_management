@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:class_frontend/Constants/variable.dart';
 import 'package:http/http.dart' as http;
-import 'package:class_frontend/Models/Student/student_model.dart';
+import 'package:class_frontend/Models/student_model.dart';
 
 class StudentRepo {
   Future<void> loginStudent(StudentDetails student) async {

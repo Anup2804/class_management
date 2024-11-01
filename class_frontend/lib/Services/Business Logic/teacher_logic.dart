@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:class_frontend/Constants/variable.dart';
-import 'package:class_frontend/Models/Teacher/teacher_model.dart';
+import 'package:class_frontend/Models/teacher_model.dart';
 import 'package:http/http.dart' as http;
 
 class TeacherRepo {

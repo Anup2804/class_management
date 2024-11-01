@@ -87,40 +87,29 @@ class TeacherHome extends StatelessWidget {
           SizedBox(
             height: 5,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Column(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, '');
-                    },
-                    child: CommonCard(
-                      content: Image.asset('assets/icons/pay.png'),
-                      width: 60,
-                      height: 60,
+          Padding(
+            padding: const EdgeInsets.only(left: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                
+                Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/teacher/upload/test');
+                      },
+                      child: CommonCard(
+                        content: Image.asset('assets/icons/test.png'),
+                        width: 60,
+                        height: 60,
+                      ),
                     ),
-                  ),
-                  Text("pay", style: smallBody)
-                ],
-              ),
-              Column(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/student/home/test');
-                    },
-                    child: CommonCard(
-                      content: Image.asset('assets/icons/test.png'),
-                      width: 60,
-                      height: 60,
-                    ),
-                  ),
-                  Text('Test', style: smallBody)
-                ],
-              ),
-            ],
+                    Text('Upload Test', style: smallBody)
+                  ],
+                ),
+              ],
+            ),
           ),
                     SizedBox(height: 5,),
           Container(
