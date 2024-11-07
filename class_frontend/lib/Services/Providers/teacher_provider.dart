@@ -1,24 +1,21 @@
 import 'package:class_frontend/Models/teacher_model.dart';
-import 'package:class_frontend/Services/Business%20Logic/teacher_logic.dart';
 import 'package:flutter/material.dart';
 
-class TeacherProvider extends ChangeNotifier{
+class TeacherProvider extends ChangeNotifier {
+TeacherData? _teacherData;
 
-// this is the student provider with all different functions.
-  final TeacherRepo _teacherRepo;
+  // Expose the teacher data
+  TeacherData? get teacherData => _teacherData;
 
-  TeacherProvider(this._teacherRepo);
-
-  Future<void> teacherLogin (TeacherDetails teacher)async {
-    // This function handles the teachers login.
-    try {
-      await _teacherRepo.teacherLogin(teacher);
-      notifyListeners();
-    } catch (error) {
-      rethrow;
-    }
+  // Method to set teacher data in the provider
+  void setTeacher(TeacherData teacherData) {
+    _teacherData = teacherData;
+    notifyListeners();
   }
 
-  
-
+  // Clear teacher data (for logout or resetting state)
+  void clearTeacherData() {
+    _teacherData = null;
+    notifyListeners();
+  }
 }

@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:class_frontend/Constants/variable.dart';
 import 'package:class_frontend/Models/teacher_model.dart';
+import 'package:class_frontend/Services/Providers/teacher_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class TeacherRepo {
-  Future<void> teacherLogin(TeacherDetails teacher) async {
+  Future<TeacherDetails> teacherLogin(BuildContext context,TeacherDetails teacher) async {
     // This function handles the endpoint for teacher login.
 
     final url = Uri.parse('$base_url/teacher/login');
@@ -21,11 +24,28 @@ class TeacherRepo {
         body: jsonData,
       );
 
-      print(response);
-
       if (response.statusCode == 200) {
-        print('Response Body: ${response.body}');
-        print('Teacher Login successful');
+        final responseBody = jsonDecode(response.body);
+
+        if (responseBody['success'] == true &&
+            responseBody.containsKey('data')) {
+          final data = responseBody['data'];
+
+          print(responseBody);
+
+          TeacherDetails teacherDetails =   TeacherDetails.fromJson(data['teacherDetails']);
+
+          TeacherData teacherData = TeacherData.fromJson(data);
+
+          Provider.of<TeacherProvider>(context,listen: false).setTeacher(teacherData);
+
+          print('Teacher data saved in provider: ${teacherData.generateAccessToken.toString()}');
+
+
+          return teacherDetails;
+        } else {
+          throw Exception(responseBody['message'] ?? 'Login failed');
+        }
       } else {
         final responseBody = jsonDecode(response.body);
         final errorMessage = responseBody['message'] ?? 'Unable to login';
@@ -34,7 +54,8 @@ class TeacherRepo {
       }
     } catch (error) {
       print('Error: $error');
-      throw 'Failed to login Teacher';
+      // throw 'Failed to login Teacher';
+      rethrow;
     }
   }
 }

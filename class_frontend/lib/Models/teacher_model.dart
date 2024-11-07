@@ -12,8 +12,8 @@ class TeacherData {
   factory TeacherData.fromJson(Map<String, dynamic> json) {
     return TeacherData(
       teacherDetails: TeacherDetails.fromJson(json['teacherDetails']),
-      generateAccessToken: json['generateAccessToken'],
-      generateRefreshToken: json['generateRefreshToken'],
+      generateAccessToken: json['generateAccessToken'] ??'',
+      generateRefreshToken: json['generateRefreshToken'] ?? '',
     );
   }
 

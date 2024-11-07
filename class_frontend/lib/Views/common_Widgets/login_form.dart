@@ -1,11 +1,12 @@
 import 'package:class_frontend/Models/admin_model.dart';
 import 'package:class_frontend/Models/student_model.dart';
 import 'package:class_frontend/Models/teacher_model.dart';
+import 'package:class_frontend/Services/Business%20Logic/teacher_logic.dart';
 import 'package:class_frontend/Services/Providers/admin_provider.dart';
 import 'package:class_frontend/Services/Providers/student_provider.dart';
 import 'package:class_frontend/Services/Providers/teacher_provider.dart';
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:class_frontend/Constants/fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +42,37 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
+  // Future<void> _saveLoginState(String userType) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setBool('isLoggedIn', true);
+  //   await prefs.setString('Token', userType);
+  //   // await prefs.setString('token', );
+  // }
+
+  Future<void> checkLoginState() async {
+    final prefs = await SharedPreferences.getInstance();
+    print(prefs.getBool('isLoggedIn') ?? false);
+    // print(prefs.getString('userType'));
+
+    final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    final userType = prefs.getString('Token');
+
+    if (isLoggedIn) {
+      switch (userType) {
+        case 'student':
+          Navigator.pushNamed(context, widget.targetPath);
+
+          break;
+        case 'teacher':
+          Navigator.pushNamedAndRemoveUntil(context, widget.targetPath,(route) => false,);
+          break;
+        case 'admin':
+          Navigator.pushNamedAndRemoveUntil(context, widget.targetPath,(route) => false,);
+          break;
+      }
+    }
+  }
+
   Future<void> _onSubmitStudent() async {
     print(_email.text.trim);
     final StudentDetails students = StudentDetails(
@@ -60,6 +92,9 @@ class _LoginFormState extends State<LoginForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Student login successfully!')),
       );
+
+      // await _saveLoginState('student');
+      await checkLoginState();
       Navigator.pushNamed(context, widget.targetPath);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +104,8 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Future<void> _onSubmitTeacher() async {
-    print(_email.text.trim);
+    final teacherRepo = Provider.of<TeacherRepo>(context, listen: false);
+    print(_email.text.trim());
     final TeacherDetails teachers = TeacherDetails(
         fullName: '',
         adminEmail: '',
@@ -80,11 +116,13 @@ class _LoginFormState extends State<LoginForm> {
         hiredForBoard: [],
         staff: '');
     try {
-      await Provider.of<TeacherProvider>(context, listen: false)
-          .teacherLogin(teachers);
+      await teacherRepo.teacherLogin(context,teachers);
+          
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Teacher login successfully!')),
       );
+      // await _saveLoginState('teacher');
+      await checkLoginState();
       Navigator.pushNamed(context, widget.targetPath);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,12 +143,20 @@ class _LoginFormState extends State<LoginForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Teacher login successfully!')),
       );
+      // await _saveLoginState('admin');
+      await checkLoginState();
       Navigator.pushNamed(context, widget.targetPath);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(' $error')),
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginState();
   }
 
   @override

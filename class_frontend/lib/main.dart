@@ -6,7 +6,6 @@ import 'package:class_frontend/Services/Providers/admin_provider.dart';
 import 'package:class_frontend/Services/Providers/student_provider.dart';
 import 'package:class_frontend/Services/Business Logic/student_logic.dart';
 import 'package:class_frontend/Services/Providers/teacher_provider.dart';
-import 'package:class_frontend/Views/common_Widgets/form.dart';
 import 'package:class_frontend/Views/main_Screens/Admin/admin_home_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Admin/admin_login_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Student/student_home_screen.dart';
@@ -24,8 +23,9 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
+    Provider(create: (_)=> TeacherRepo()),
     ChangeNotifierProvider(create: (_) => StudentProvider(StudentRepo())),
-    ChangeNotifierProvider(create: (_) => TeacherProvider(TeacherRepo())),
+    ChangeNotifierProvider(create: (_) => TeacherProvider()),
     ChangeNotifierProvider(create: (_) => AdminProvider(AdminRepo())),
   ], child: const MyApp()));
 }
