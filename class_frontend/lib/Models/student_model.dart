@@ -1,5 +1,3 @@
-// This is the student model.
-
 class StudentDetails {
   final String? id;
   final String fullName;
@@ -13,7 +11,6 @@ class StudentDetails {
   final String phoneNo;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  
 
   StudentDetails({
     this.id,
@@ -28,23 +25,21 @@ class StudentDetails {
     required this.phoneNo,
     this.createdAt,
     this.updatedAt,
-    
   });
 
   factory StudentDetails.fromJson(Map<String, dynamic> json) {
     return StudentDetails(
-      id: json['_id'],
-      fullName: json['fullName'],
-      adminEmail: json['adminEmail'],
-      email: json['email'],
-      standard: json['standard'],
-      schoolName: json['schoolName'],
-      board: json['board'],
+      id: json['_id'] ?? '',
+      fullName: json['fullName'] ?? '',
+      adminEmail: json['adminEmail'] ?? '',
+      email: json['email'] ?? '',
+      standard: json['standard'] ?? '',
+      schoolName: json['schoolName'] ?? '',
+      board: json['board'] ?? '',
       subjectChosen: List<String>.from(json['subjectChosen']),
-      phoneNo: json['phoneNo'],
+      phoneNo: json['phoneNo'] ?? '',
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      
     );
   }
 
@@ -54,7 +49,7 @@ class StudentDetails {
       'fullName': fullName,
       'adminEmail': adminEmail,
       'email': email,
-      'password':password,
+      'password': password,
       'standard': standard,
       'schoolName': schoolName,
       'board': board,
@@ -62,35 +57,36 @@ class StudentDetails {
       'phoneNo': phoneNo,
       // 'createdAt': createdAt.toIso8601String(),
       // 'updatedAt': updatedAt.toIso8601String(),
-      
     };
   }
 }
 
-// class LoginResponse {
-//   final StudentDetails studentDetails;
-//   final String accessToken;
-//   final String refreshToken;
+class StudentData {
+  final StudentDetails studentDetails;
+  final String accessToken;
+  final String refreshToken;
 
-//   LoginResponse({
-//     required this.studentDetails,
-//     required this.accessToken,
-//     required this.refreshToken,
-//   });
+  StudentData({
+    required this.studentDetails,
+    required this.accessToken,
+    required this.refreshToken,
+  });
 
-//   factory LoginResponse.fromJson(Map<String, dynamic> json) {
-//     return LoginResponse(
-//       studentDetails: StudentDetails.fromJson(json['sutdentDetails']),
-//       accessToken: json['generateAccessToken'],
-//       refreshToken: json['generateRefreshToken'],
-//     );
-//   }
+  factory StudentData.fromJson(Map<String, dynamic> json) {
+    return StudentData(
+      studentDetails: StudentDetails.fromJson(json['data']['sutdentDetails']),
+      accessToken: json['data']['generateAccessToken'],
+      refreshToken: json['data']['generateRefreshToken'],
+    );
+  }
 
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'sutdentDetails': studentDetails.toJson(),
-//       'generateAccessToken': accessToken,
-//       'generateRefreshToken': refreshToken,
-//     };
-//   }
-// }
+  Map<String, dynamic> toJson() {
+    return {
+      'data': {
+        'sutdentDetails': studentDetails.toJson(),
+        'generateAccessToken': accessToken,
+        'generateRefreshToken': refreshToken,
+      },
+    };
+  }
+}

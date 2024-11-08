@@ -1,16 +1,16 @@
-class LoginResponse {
+class AdminData {
   final AdminDetails adminDetails;
   final String generateAccessToken;
   final String generateRefreshToken;
 
-  LoginResponse({
+  AdminData({
     required this.adminDetails,
     required this.generateAccessToken,
     required this.generateRefreshToken,
   });
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    return LoginResponse(
+  factory AdminData.fromJson(Map<String, dynamic> json) {
+    return AdminData(
       adminDetails: AdminDetails.fromJson(json['adminDetails']),
       generateAccessToken: json['generateAccessToken'],
       generateRefreshToken: json['generateRefreshToken'],

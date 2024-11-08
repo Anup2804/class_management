@@ -1,10 +1,9 @@
 import 'package:class_frontend/Models/admin_model.dart';
 import 'package:class_frontend/Models/student_model.dart';
 import 'package:class_frontend/Models/teacher_model.dart';
+import 'package:class_frontend/Services/Business%20Logic/admin_logic.dart';
+import 'package:class_frontend/Services/Business%20Logic/student_logic.dart';
 import 'package:class_frontend/Services/Business%20Logic/teacher_logic.dart';
-import 'package:class_frontend/Services/Providers/admin_provider.dart';
-import 'package:class_frontend/Services/Providers/student_provider.dart';
-import 'package:class_frontend/Services/Providers/teacher_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:class_frontend/Constants/fonts.dart';
@@ -64,17 +63,26 @@ class _LoginFormState extends State<LoginForm> {
 
           break;
         case 'teacher':
-          Navigator.pushNamedAndRemoveUntil(context, widget.targetPath,(route) => false,);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            widget.targetPath,
+            (route) => false,
+          );
           break;
         case 'admin':
-          Navigator.pushNamedAndRemoveUntil(context, widget.targetPath,(route) => false,);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            widget.targetPath,
+            (route) => false,
+          );
           break;
       }
     }
   }
 
   Future<void> _onSubmitStudent() async {
-    print(_email.text.trim);
+    final studentRepo = Provider.of<StudentRepo>(context, listen: false);
+    print(_email.text.trim());
     final StudentDetails students = StudentDetails(
       fullName: '',
       adminEmail: '',
@@ -87,8 +95,7 @@ class _LoginFormState extends State<LoginForm> {
       subjectChosen: [],
     );
     try {
-      await Provider.of<StudentProvider>(context, listen: false)
-          .studentLogin(students);
+      await studentRepo.loginStudent(context, students);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Student login successfully!')),
       );
@@ -116,8 +123,8 @@ class _LoginFormState extends State<LoginForm> {
         hiredForBoard: [],
         staff: '');
     try {
-      await teacherRepo.teacherLogin(context,teachers);
-          
+      await teacherRepo.teacherLogin(context, teachers);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Teacher login successfully!')),
       );
@@ -132,14 +139,14 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Future<void> _onSubmitAdmin() async {
-    print(_email.text.trim);
+    final adminRepo = Provider.of<AdminRepo>(context, listen: false);
+    print(_email.text.trim());
     final AdminDetails admins = AdminDetails(
         adminName: '',
         email: _email.text.trim(),
         password: _password.text.trim());
     try {
-      await Provider.of<AdminProvider>(context, listen: false)
-          .adminLogin(admins);
+      await adminRepo.adminLogin(context, admins);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Teacher login successfully!')),
       );

@@ -8,7 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class TeacherRepo {
-  Future<TeacherDetails> teacherLogin(BuildContext context,TeacherDetails teacher) async {
+  Future<TeacherDetails> teacherLogin(
+      BuildContext context, TeacherDetails teacher) async {
     // This function handles the endpoint for teacher login.
 
     final url = Uri.parse('$base_url/teacher/login');
@@ -33,14 +34,16 @@ class TeacherRepo {
 
           print(responseBody);
 
-          TeacherDetails teacherDetails =   TeacherDetails.fromJson(data['teacherDetails']);
+          TeacherDetails teacherDetails =
+              TeacherDetails.fromJson(data['teacherDetails']);
 
           TeacherData teacherData = TeacherData.fromJson(data);
 
-          Provider.of<TeacherProvider>(context,listen: false).setTeacher(teacherData);
+          Provider.of<TeacherProvider>(context, listen: false)
+              .setTeacher(teacherData);
 
-          print('Teacher data saved in provider: ${teacherData.generateAccessToken.toString()}');
-
+          print(
+              'Teacher data saved in provider: ${teacherData.generateAccessToken.toString()}');
 
           return teacherDetails;
         } else {
@@ -54,8 +57,8 @@ class TeacherRepo {
       }
     } catch (error) {
       print('Error: $error');
-      // throw 'Failed to login Teacher';
-      rethrow;
+      throw 'Failed to login Teacher';
+      // rethrow;
     }
   }
 }

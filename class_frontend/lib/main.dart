@@ -24,9 +24,11 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(MultiProvider(providers: [
     Provider(create: (_)=> TeacherRepo()),
-    ChangeNotifierProvider(create: (_) => StudentProvider(StudentRepo())),
+    Provider(create:(_)=> StudentRepo()),
+    Provider(create:(_) => AdminRepo()),
+    ChangeNotifierProvider(create: (_) => StudentProvider()),
     ChangeNotifierProvider(create: (_) => TeacherProvider()),
-    ChangeNotifierProvider(create: (_) => AdminProvider(AdminRepo())),
+    ChangeNotifierProvider(create: (_) => AdminProvider()),
   ], child: const MyApp()));
 }
 

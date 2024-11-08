@@ -1,18 +1,18 @@
 import 'package:class_frontend/Models/admin_model.dart';
-import 'package:class_frontend/Services/Business%20Logic/admin_logic.dart';
 import 'package:flutter/material.dart';
 
 class AdminProvider extends ChangeNotifier{
-  final AdminRepo _adminRepo;
+  AdminData? _adminData;
 
-  AdminProvider(this._adminRepo);
+  AdminData? get adminData => _adminData;
 
-  Future<void> adminLogin(AdminDetails admin) async{
-        try {
-      await _adminRepo.adminLogin(admin);
-      notifyListeners();
-    } catch (error) {
-      rethrow;
-    }
+  void setAdmin(AdminData admin){
+    _adminData= admin;
+    notifyListeners();
+  }
+
+  void clearAdminData(){
+    _adminData = null;
+    notifyListeners();
   }
 }

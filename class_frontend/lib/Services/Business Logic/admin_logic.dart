@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:class_frontend/Constants/variable.dart';
 import 'package:class_frontend/Models/admin_model.dart';
+import 'package:class_frontend/Services/Providers/admin_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class AdminRepo {
-  Future<void> adminLogin(AdminDetails admin)async{
+  Future<AdminDetails> adminLogin(BuildContext context, AdminDetails admin)async{
     final url = Uri.parse('$base_url/admins/login');
 
     final jsonData = jsonEncode(admin.toJson());
@@ -19,7 +22,27 @@ class AdminRepo {
 
       if (response.statusCode == 200) {
         print('Response Body: ${response.body}');
-        print('Login successful');
+        final responseBody = jsonDecode(response.body);
+        if (responseBody['success'] == true &&
+            responseBody.containsKey('data')) {
+          final data = responseBody['data'];
+
+          print(responseBody);
+
+          AdminDetails adminDetails =   AdminDetails.fromJson(data['adminDetails']);
+
+          AdminData adminData = AdminData.fromJson(data);
+
+          Provider.of<AdminProvider>(context,listen: false).setAdmin(adminData);
+
+          print('Admin data saved in provider: ${adminData.generateAccessToken.toString()}');
+
+
+          return adminDetails;
+        } else {
+          throw Exception(responseBody['message'] ?? 'Login failed');
+        }
+        
       } else {
         final responseBody = jsonDecode(response.body);
         final errorMessage = responseBody['message'] ?? 'Unable to login';
