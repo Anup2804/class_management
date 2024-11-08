@@ -1,5 +1,9 @@
 import 'package:class_frontend/Constants/fonts.dart';
+import 'package:class_frontend/Models/test_model.dart';
+import 'package:class_frontend/Services/Providers/teacher_provider.dart';
+import 'package:class_frontend/Services/Providers/test_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DataForm extends StatelessWidget {
   const DataForm({super.key});
@@ -14,6 +18,32 @@ class DataForm extends StatelessWidget {
     final TextEditingController _board = TextEditingController();
     final TextEditingController _date = TextEditingController();
     final TextEditingController _description = TextEditingController();
+
+    Future<void> _uploadTest() async {
+      final testProvider = Provider.of<TestProvider>(context, listen: false);
+
+      final TestData tests = TestData(
+          subjectName: _subjectName.text,
+          standard: _standard.text,
+          time: _time.text,
+          date: _date.text,
+          board: _board.text.toUpperCase(),
+          chapterNo: _chapterNo.text,
+          description: _description.text
+          );
+
+      try {
+        await testProvider.postTestDetails(tests);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Test Notice uploaded successfully!')),
+        );
+      } catch (err) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(' $err')),
+        );
+      }
+    }
+
     return Form(
         key: _formkey,
         child: Padding(
@@ -156,8 +186,7 @@ class DataForm extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('upload done')));
+                      _uploadTest();
                     }
                   },
                   child: Text(

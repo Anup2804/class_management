@@ -6,7 +6,8 @@ class DisplayCard extends StatelessWidget {
   final String date;
   final String time;
   final String description;
-  final String byTeacher;
+  final String? byTeacher;
+  final String chapterNo;
   final Color? colors1;
   final Color? colors2;
 
@@ -17,8 +18,8 @@ class DisplayCard extends StatelessWidget {
     required this.time,
     required this.description,
     this.colors1,
-    this.colors2, 
-    required this.byTeacher,
+    this.colors2,
+    this.byTeacher, required this.chapterNo,
   });
 
   @override
@@ -54,9 +55,13 @@ class DisplayCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text('ChapterNo: $chapterNo', style: smallBody),
                       Text('Date: $date', style: smallBody),
                       Text('Time: $time', style: smallBody),
-                      Text('ByTeacher: $byTeacher',style: smallBody,)
+                      Text(
+                        'ByTeacher: $byTeacher' ?? 'no name',
+                        style: smallBody,
+                      )
                     ],
                   ),
                   Icon(

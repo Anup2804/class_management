@@ -1,53 +1,66 @@
-class Test {
-  final String? id;
-  final Teacher byTeacher;
-  final String adminEmail;
-  final String subjectName;
-  final String chapterNo;
-  final String standard;
-  final String time;
-  final DateTime date;
-  final String description;
-  final String board;
+class TestNotice {
+  List<TestData> data;
 
-  Test({
+  TestNotice({
+    required this.data,
+  });
+
+  factory TestNotice.fromJson(Map<String, dynamic> json) {
+    return TestNotice(
+      data: List<TestData>.from(
+          json['data'].map((item) => TestData.fromJson(item))),
+    );
+  }
+}
+
+class TestData {
+  String? id;
+  Teacher? byTeacher;
+  String? adminEmail;
+  String subjectName;
+  String chapterNo;
+  String standard;
+  String time;
+  String date;
+  String? description;
+  String board;
+
+  TestData({
     this.id,
-    required this.byTeacher,
-    required this.adminEmail,
-    required this.subjectName,
+    this.byTeacher,
+    this.adminEmail,
     required this.chapterNo,
+    required this.subjectName,
     required this.standard,
     required this.time,
     required this.date,
-    required this.description,
+    this.description,
     required this.board,
   });
 
-  factory Test.fromJson(Map<String, dynamic> json) {
-    return Test(
-      id: json['_id'] as String,
+  factory TestData.fromJson(Map<String, dynamic> json) {
+    return TestData(
+      id: json['_id'],
       byTeacher: Teacher.fromJson(json['byTeacher']),
-      adminEmail: json['adminEmail'] as String,
-      subjectName: json['subjectName'] as String,
-      chapterNo: json['chapterNo'] as String,
-      standard: json['standard'] as String,
-      time: json['time'] as String,
-      date: DateTime.parse(json['date'] as String),
-      description: json['description'] as String,
-      board: json['board'] as String,
+      adminEmail: json['adminEmail'],
+      subjectName: json['subjectName'],
+      standard: json['standard'],
+      chapterNo: json['chapterNo'],
+      time: json['time'],
+      date: json['date'],
+      description: json['description'] ?? '',
+      board: json['board'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'byTeacher': byTeacher.toJson(),
-      'adminEmail': adminEmail,
       'subjectName': subjectName,
-      'chapterNo': chapterNo,
       'standard': standard,
       'time': time,
-      'date': date.toIso8601String(),
+      'chapterNo': chapterNo,
+      'date': date,
       'description': description,
       'board': board,
     };
@@ -55,8 +68,8 @@ class Test {
 }
 
 class Teacher {
-  final String id;
-  final String name;
+  String id;
+  String name;
 
   Teacher({
     required this.id,
@@ -65,8 +78,8 @@ class Teacher {
 
   factory Teacher.fromJson(Map<String, dynamic> json) {
     return Teacher(
-      id: json['_id'] as String,
-      name: json['name'] as String,
+      id: json['_id'],
+      name: json['name'],
     );
   }
 

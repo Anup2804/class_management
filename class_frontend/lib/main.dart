@@ -3,9 +3,11 @@ import 'package:class_frontend/Constants/fonts.dart';
 import 'package:class_frontend/Services/Business%20Logic/admin_logic.dart';
 import 'package:class_frontend/Services/Business%20Logic/teacher_logic.dart';
 import 'package:class_frontend/Services/Providers/admin_provider.dart';
+import 'package:class_frontend/Services/Providers/lecture.provider.dart';
 import 'package:class_frontend/Services/Providers/student_provider.dart';
 import 'package:class_frontend/Services/Business Logic/student_logic.dart';
 import 'package:class_frontend/Services/Providers/teacher_provider.dart';
+import 'package:class_frontend/Services/Providers/test_provider.dart';
 import 'package:class_frontend/Views/main_Screens/Admin/admin_home_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Admin/admin_login_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Student/student_home_screen.dart';
@@ -29,6 +31,8 @@ void main() {
     ChangeNotifierProvider(create: (_) => StudentProvider()),
     ChangeNotifierProvider(create: (_) => TeacherProvider()),
     ChangeNotifierProvider(create: (_) => AdminProvider()),
+    ChangeNotifierProvider(create: (_) => TestProvider()),
+    ChangeNotifierProvider(create: (_) => LectureProvider())
   ], child: const MyApp()));
 }
 

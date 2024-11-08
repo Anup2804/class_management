@@ -6,6 +6,7 @@ import 'package:class_frontend/Services/Providers/teacher_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TeacherRepo {
   Future<TeacherDetails> teacherLogin(
@@ -44,6 +45,12 @@ class TeacherRepo {
 
           print(
               'Teacher data saved in provider: ${teacherData.generateAccessToken.toString()}');
+
+           final prefs = await SharedPreferences.getInstance();
+           
+          await prefs.setString('teacherAccessToken', teacherData.generateAccessToken);
+
+          print('Access token saved: ${teacherData.generateAccessToken}');
 
           return teacherDetails;
         } else {
