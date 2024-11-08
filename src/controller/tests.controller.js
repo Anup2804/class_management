@@ -158,6 +158,7 @@ const getTestNotice = asyncHandler(async (req, res) => {
         board: 1,
         adminEmail: 1,
         date:1,
+        chapterNo:1
       },
     },
   ]);
