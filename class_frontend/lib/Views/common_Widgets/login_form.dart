@@ -10,11 +10,13 @@ import 'package:class_frontend/Constants/fonts.dart';
 import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
+  final String registerPath;
   final String targetPath;
   final String type;
 
   const LoginForm({
     super.key,
+    required this.registerPath,
     required this.targetPath,
     required this.type,
   });
@@ -294,6 +296,21 @@ class _LoginFormState extends State<LoginForm> {
                   },
                   child: Text('Submit'),
                 ),
+                Visibility(
+                  visible: widget.type != 'admin',
+                  child: InkWell(
+                    onTap: (){
+                      if (widget.type == 'student') {
+                          Navigator.pushNamed(context, widget.registerPath);
+                        } else if (widget.type == 'teacher') {
+                          Navigator.pushNamed(context, widget.registerPath);
+                        } 
+                    },
+                      child: Text(
+                    'do not have account? Register now.',
+                    style: TextStyle(color: Colors.red, fontSize: 11),
+                  )),
+                )
               ],
             ))
       ],

@@ -62,4 +62,35 @@ class StudentRepo {
       // rethrow;
     }
   }
+  
+  
+  Future<void> registerStudent(StudentDetails student) async{
+    final url = Uri.parse('$base_url/student/login');
+
+    final jsonData = jsonEncode(student.toJson());
+
+    print(jsonData);
+
+    try
+    {
+       final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: jsonData,
+      );
+
+      if(response.statusCode == 200){
+        print('student register successful');
+      }else {
+        final responseBody = jsonDecode(response.body);
+        final errorMessage = responseBody['message'] ?? 'Unable to register';
+        print('Unable to register: $errorMessage');
+        throw Exception(errorMessage);
+      }
+    }
+    catch(err)
+    {
+      throw('unable to register student');
+    }
+  }
 }

@@ -26,6 +26,7 @@ class TeacherLogin extends StatelessWidget {
             content: LoginForm(
               targetPath: '/teacher/home',
               type: 'teacher',
+              registerPath: '/teacher/register',
             )),
       ),
     ]));

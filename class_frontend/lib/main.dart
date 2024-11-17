@@ -15,9 +15,11 @@ import 'package:class_frontend/Views/main_Screens/Student/student_lectures_scree
 import 'package:class_frontend/Views/main_Screens/Student/student_login_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Student/student_marks_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Student/student_notes_screen.dart';
+import 'package:class_frontend/Views/main_Screens/Student/student_register_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Student/student_test_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_home_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_login_screen.dart';
+import 'package:class_frontend/Views/main_Screens/Teacher/teacher_register_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_upload_test.dart';
 import 'package:class_frontend/selection.dart';
 import 'package:flutter/material.dart';
@@ -59,9 +61,11 @@ class MyApp extends StatelessWidget {
         "/admin/login": (context) => AdminLogin(),
         "/admin/home": (context) => AdminHome(),
         "/teacher/login": (context) => TeacherLogin(),
+        "/teacher/register": (context) => TeacherRegister(),
         "/teacher/home": (context) => TeacherHome(),
         "/teacher/upload/test":(context) => UploadTest(),
         "/student/login": (context) => StudentLogin(),
+        "/student/register":(context) => StudentRegister(),
         "/student/home": (context) => StudentHome(),
         "/student/home/lecture": (context) => StudentLecture(),
         "/student/home/note": (context) => StudentNotes(),

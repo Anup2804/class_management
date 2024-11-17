@@ -27,7 +27,7 @@ class StudentLogin extends StatelessWidget {
             child: CommonCard(
               width: double.infinity,
               height: 250,
-              content: LoginForm(targetPath: '/student/home',type: 'student',)
+              content: LoginForm(targetPath: '/student/home',type: 'student',registerPath: '/student/register',)
             ),
           ),]
         ),

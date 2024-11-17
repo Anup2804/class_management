@@ -13,7 +13,7 @@ class AdminLogin extends StatelessWidget {
           child: CommonCard(
             width: double.infinity,
             height: 250,
-            content: LoginForm(targetPath: '/admin/home',type: 'admin',)
+            content: LoginForm(targetPath: '/admin/home',type: 'admin',registerPath: '',)
           ),
         ));
   }

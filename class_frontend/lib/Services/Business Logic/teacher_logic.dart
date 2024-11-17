@@ -46,9 +46,10 @@ class TeacherRepo {
           print(
               'Teacher data saved in provider: ${teacherData.generateAccessToken.toString()}');
 
-           final prefs = await SharedPreferences.getInstance();
-           
-          await prefs.setString('teacherAccessToken', teacherData.generateAccessToken);
+          final prefs = await SharedPreferences.getInstance();
+
+          await prefs.setString(
+              'teacherAccessToken', teacherData.generateAccessToken);
 
           print('Access token saved: ${teacherData.generateAccessToken}');
 
@@ -66,6 +67,34 @@ class TeacherRepo {
       print('Error: $error');
       throw 'Failed to login Teacher';
       // rethrow;
+    }
+  }
+
+  Future<void> teacherRegister(TeacherDetails teacher) async {
+    final url = Uri.parse('$base_url/teacher/register');
+
+    final jsonData = jsonEncode(teacher.toJson());
+
+    print(jsonData);
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: jsonData,
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        print('register done');
+      } else {
+        final responseBody = jsonDecode(response.body);
+        final errorMessage = responseBody['message'] ?? 'Unable to register';
+        print('Unable to register: $errorMessage');
+        throw Exception(errorMessage);
+      }
+    } catch (err) {
+      throw ('failed to register.');
     }
   }
 }

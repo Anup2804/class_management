@@ -1,6 +1,5 @@
 import 'package:class_frontend/Constants/fonts.dart';
 import 'package:class_frontend/Models/test_model.dart';
-import 'package:class_frontend/Services/Providers/teacher_provider.dart';
 import 'package:class_frontend/Services/Providers/test_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
