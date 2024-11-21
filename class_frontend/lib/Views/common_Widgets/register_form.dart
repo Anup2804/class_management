@@ -226,6 +226,7 @@ class _RegisterFormState extends State<RegisterForm> {
             formItem[5],
             formItem[6],
             formItem[7],
+            formItem[8]
           ];
 
     return Column(

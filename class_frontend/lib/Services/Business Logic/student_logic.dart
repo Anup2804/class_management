@@ -65,7 +65,7 @@ class StudentRepo {
   
   
   Future<void> registerStudent(StudentDetails student) async{
-    final url = Uri.parse('$base_url/student/login');
+    final url = Uri.parse('$base_url/student/register');
 
     final jsonData = jsonEncode(student.toJson());
 

@@ -68,7 +68,7 @@ class _StudentLectureState extends State<StudentLecture> {
                       date: item.date,
                       time: item.time,
                       chapterNo: '0',
-                      description: item.description ?? 'No description',
+                      description: item.description,
                       byTeacher: item.byTeacher?.name,
                     );
                   },

@@ -15,7 +15,9 @@ class TeacherHome extends StatelessWidget {
       ),
       body: Column(
         children: [
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           Container(
               decoration: BoxDecoration(color: Colors.grey),
               child: Row(
@@ -33,16 +35,16 @@ class TeacherHome extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, '/student/home/lecture');
+                      Navigator.pushNamed(context, '/teacher/upload/test');
                     },
                     child: CommonCard(
-                      content: Image.asset('assets/icons/lecture.png'),
+                      content: Image.asset('assets/icons/test.png'),
                       width: 60,
                       height: 60,
                     ),
                   ),
                   Text(
-                    'Lectures',
+                    'Upload Test',
                     style: smallBody,
                   )
                 ],
@@ -87,31 +89,9 @@ class TeacherHome extends StatelessWidget {
           SizedBox(
             height: 5,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                
-                Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/teacher/upload/test');
-                      },
-                      child: CommonCard(
-                        content: Image.asset('assets/icons/test.png'),
-                        width: 60,
-                        height: 60,
-                      ),
-                    ),
-                    Text('Upload Test', style: smallBody)
-                  ],
-                ),
-              ],
-            ),
+          SizedBox(
+            height: 5,
           ),
-                    SizedBox(height: 5,),
           Container(
               decoration: BoxDecoration(color: Colors.grey),
               child: Row(
@@ -129,7 +109,7 @@ class TeacherHome extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, '/student/home/lecture');
+                      Navigator.pushNamed(context, '/teacher/view/lecture');
                     },
                     child: CommonCard(
                       content: Image.asset('assets/icons/lecture.png'),
@@ -188,11 +168,8 @@ class TeacherHome extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                
                 Column(
-            
                   children: [
-                    
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(context, '/student/home/test');

@@ -59,7 +59,7 @@ class DisplayCard extends StatelessWidget {
                       Text('Date: $date', style: smallBody),
                       Text('Time: $time', style: smallBody),
                       Text(
-                        'ByTeacher: $byTeacher' ?? 'no name',
+                        'ByTeacher: $byTeacher',
                         style: smallBody,
                       )
                     ],

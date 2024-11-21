@@ -1,5 +1,6 @@
 import 'package:class_frontend/Constants/colors.dart';
 import 'package:class_frontend/Constants/fonts.dart';
+import 'package:class_frontend/Models/test_model.dart';
 import 'package:class_frontend/Services/Business%20Logic/admin_logic.dart';
 import 'package:class_frontend/Services/Business%20Logic/teacher_logic.dart';
 import 'package:class_frontend/Services/Providers/admin_provider.dart';
@@ -21,15 +22,16 @@ import 'package:class_frontend/Views/main_Screens/Teacher/teacher_home_screen.da
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_login_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_register_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_upload_test.dart';
-import 'package:class_frontend/selection.dart';
+import 'package:class_frontend/Views/main_Screens/Teacher/teacher_view_lecture.dart';
+import 'package:class_frontend/Views/common_Widgets/upload_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    Provider(create: (_)=> TeacherRepo()),
-    Provider(create:(_)=> StudentRepo()),
-    Provider(create:(_) => AdminRepo()),
+    Provider(create: (_) => TeacherRepo()),
+    Provider(create: (_) => StudentRepo()),
+    Provider(create: (_) => AdminRepo()),
     ChangeNotifierProvider(create: (_) => StudentProvider()),
     ChangeNotifierProvider(create: (_) => TeacherProvider()),
     ChangeNotifierProvider(create: (_) => AdminProvider()),
@@ -55,17 +57,18 @@ class MyApp extends StatelessWidget {
             headlineMedium: mediumHeadline,
           ),
           scaffoldBackgroundColor: backgroudColor),
-      // home: DataForm(),
+      home: UploadForm(),
       routes: {
-        "/": (context) => SelectionPage(),
+        // "/": (context) => SelectionPage(),
         "/admin/login": (context) => AdminLogin(),
         "/admin/home": (context) => AdminHome(),
         "/teacher/login": (context) => TeacherLogin(),
         "/teacher/register": (context) => TeacherRegister(),
         "/teacher/home": (context) => TeacherHome(),
-        "/teacher/upload/test":(context) => UploadTest(),
+        "/teacher/upload/test": (context) => UploadTest(),
+        "/teacher/view/lecture": (context) => ViewLecture(),
         "/student/login": (context) => StudentLogin(),
-        "/student/register":(context) => StudentRegister(),
+        "/student/register": (context) => StudentRegister(),
         "/student/home": (context) => StudentHome(),
         "/student/home/lecture": (context) => StudentLecture(),
         "/student/home/note": (context) => StudentNotes(),
