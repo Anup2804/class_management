@@ -14,7 +14,7 @@ const uploadMarks = asyncHandler(async (req, res) => {
     throw new apiError(402, "subjetName or standard or chapterNo is required ");
   }
 
-  if (!req.teacher && !mongoose.Types.ObjectId.isValid(!req.teacher._id)) {
+  if (!req.teacher) {
     throw new apiError(401, "user not logged in or invalid user.");
   }
 
