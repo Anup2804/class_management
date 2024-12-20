@@ -53,7 +53,7 @@ class TeacherHome extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, '/student/home/marks');
+                      Navigator.pushNamed(context, '/teacher/upload/marks');
                     },
                     child: CommonCard(
                       content: Image.asset('assets/icons/exam.png'),

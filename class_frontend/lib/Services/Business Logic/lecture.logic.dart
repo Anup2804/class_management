@@ -37,4 +37,9 @@ class LectureRepo {
       rethrow;
     }
   }
+
+  // Future<LectureNotice> uploadLectureData() async {
+  //   final uri = Uri.parse('$base_url/');
+  // }
+
 }

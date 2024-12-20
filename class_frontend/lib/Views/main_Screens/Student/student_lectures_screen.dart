@@ -11,7 +11,7 @@ class StudentLecture extends StatefulWidget {
 }
 
 class _StudentLectureState extends State<StudentLecture> {
-   @override
+  @override
   void initState() {
     super.initState();
     // Fetch test details on widget initialization
@@ -19,36 +19,37 @@ class _StudentLectureState extends State<StudentLecture> {
       Provider.of<LectureProvider>(context, listen: false).fetchLectureNotice();
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Lecture"),
-          elevation: 1,
-          titleSpacing: 2,
-        ),
-        body:
-        // Column(
-        //   children: [
-        //     Expanded(child: ListView.builder(
-        //       shrinkWrap: true,
-        //       itemCount: 5,
-        //       itemBuilder: (context, index) {
-        //       return DisplayCard(
-        //       title: 'maths',
-        //       date: '20-12-24',
-        //       time: '4pm',
-        //       description: 'only for 10th',
-        //       chapterNo: '10',
-        //       byTeacher: 'mona miss',
-        //       colors1: Colors.green[200],
-        //       colors2: Colors.green[100],
-        //     );
-        //     },))
-        //   ],
-        // )
-        Consumer<LectureProvider>( 
-          builder:(context, lecture, child) {
+      appBar: AppBar(
+        title: Text("Lecture"),
+        elevation: 1,
+        titleSpacing: 2,
+      ),
+      body:
+          // Column(
+          //   children: [
+          //     Expanded(child: ListView.builder(
+          //       shrinkWrap: true,
+          //       itemCount: 5,
+          //       itemBuilder: (context, index) {
+          //       return DisplayCard(
+          //       title: 'maths',
+          //       date: '20-12-24',
+          //       time: '4pm',
+          //       description: 'only for 10th',
+          //       chapterNo: '10',
+          //       byTeacher: 'mona miss',
+          //       colors1: Colors.green[200],
+          //       colors2: Colors.green[100],
+          //     );
+          //     },))
+          //   ],
+          // )
+          Consumer<LectureProvider>(
+        builder: (context, lecture, child) {
           final lectureData = lecture.lectureNotice;
 
           if (lectureData == null) {
@@ -77,7 +78,7 @@ class _StudentLectureState extends State<StudentLecture> {
             ],
           );
         },
-        ),
-        );
+      ),
+    );
   }
 }

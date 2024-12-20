@@ -54,6 +54,12 @@ class DataForm extends StatelessWidget {
                 cursorHeight: 22,
                 cursorWidth: 1.5,
                 style: smallBody,
+                validator: (value){
+                  if(value == null || value.isEmpty){
+                    return 'Subjct name is required';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -61,6 +67,7 @@ class DataForm extends StatelessWidget {
                       'Subject Name',
                       style: mediumBody,
                     ),
+                    
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     )),
@@ -73,6 +80,12 @@ class DataForm extends StatelessWidget {
                 cursorHeight: 22,
                 cursorWidth: 1.5,
                 style: smallBody,
+                validator: (value){
+                  if(value == null || value.isEmpty){
+                    return 'Stadard is required';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -92,6 +105,12 @@ class DataForm extends StatelessWidget {
                 cursorHeight: 22,
                 cursorWidth: 1.5,
                 style: smallBody,
+                validator: (value){
+                  if(value == null || value.isEmpty){
+                    return 'Chapter No is required';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -111,6 +130,12 @@ class DataForm extends StatelessWidget {
                 cursorHeight: 22,
                 cursorWidth: 1.5,
                 style: smallBody,
+                validator: (value){
+                  if(value == null || value.isEmpty){
+                    return 'Boards is required';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -130,6 +155,12 @@ class DataForm extends StatelessWidget {
                 cursorHeight: 22,
                 cursorWidth: 1.5,
                 style: smallBody,
+                validator: (value){
+                  if(value == null || value.isEmpty){
+                    return 'time is required';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -149,6 +180,12 @@ class DataForm extends StatelessWidget {
                 cursorHeight: 22,
                 cursorWidth: 1.5,
                 style: smallBody,
+                validator: (value){
+                  if(value == null || value.isEmpty){
+                    return 'Date is required';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 8, vertical: 0),

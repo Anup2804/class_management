@@ -1,10 +1,10 @@
 import 'package:class_frontend/Constants/colors.dart';
 import 'package:class_frontend/Constants/fonts.dart';
-import 'package:class_frontend/Models/test_model.dart';
 import 'package:class_frontend/Services/Business%20Logic/admin_logic.dart';
 import 'package:class_frontend/Services/Business%20Logic/teacher_logic.dart';
 import 'package:class_frontend/Services/Providers/admin_provider.dart';
 import 'package:class_frontend/Services/Providers/lecture.provider.dart';
+import 'package:class_frontend/Services/Providers/marks_provider.dart';
 import 'package:class_frontend/Services/Providers/student_provider.dart';
 import 'package:class_frontend/Services/Business Logic/student_logic.dart';
 import 'package:class_frontend/Services/Providers/teacher_provider.dart';
@@ -18,12 +18,14 @@ import 'package:class_frontend/Views/main_Screens/Student/student_marks_screen.d
 import 'package:class_frontend/Views/main_Screens/Student/student_notes_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Student/student_register_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Student/student_test_screen.dart';
+import 'package:class_frontend/Views/main_Screens/Teacher/teacher_attendence.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_home_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_login_screen.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_register_screen.dart';
+import 'package:class_frontend/Views/main_Screens/Teacher/teacher_upload_marks.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_upload_test.dart';
 import 'package:class_frontend/Views/main_Screens/Teacher/teacher_view_lecture.dart';
-import 'package:class_frontend/Views/common_Widgets/upload_form.dart';
+import 'package:class_frontend/selection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +38,8 @@ void main() {
     ChangeNotifierProvider(create: (_) => TeacherProvider()),
     ChangeNotifierProvider(create: (_) => AdminProvider()),
     ChangeNotifierProvider(create: (_) => TestProvider()),
-    ChangeNotifierProvider(create: (_) => LectureProvider())
+    ChangeNotifierProvider(create: (_) => LectureProvider()),
+    ChangeNotifierProvider(create: (_) => MarksProvider())
   ], child: const MyApp()));
 }
 
@@ -57,16 +60,18 @@ class MyApp extends StatelessWidget {
             headlineMedium: mediumHeadline,
           ),
           scaffoldBackgroundColor: backgroudColor),
-      home: UploadForm(),
+      // home: UploadForm(),
       routes: {
-        // "/": (context) => SelectionPage(),
+        "/": (context) => SelectionPage(),
         "/admin/login": (context) => AdminLogin(),
         "/admin/home": (context) => AdminHome(),
         "/teacher/login": (context) => TeacherLogin(),
         "/teacher/register": (context) => TeacherRegister(),
         "/teacher/home": (context) => TeacherHome(),
         "/teacher/upload/test": (context) => UploadTest(),
+        "/teacher/upload/marks":(context) => UploadMarks(),
         "/teacher/view/lecture": (context) => ViewLecture(),
+        "/teacher/takeattendence": (context) => TakeAttendence(),
         "/student/login": (context) => StudentLogin(),
         "/student/register": (context) => StudentRegister(),
         "/student/home": (context) => StudentHome(),
