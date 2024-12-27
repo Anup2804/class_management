@@ -1,5 +1,6 @@
 import 'package:class_frontend/Constants/fonts.dart';
 import 'package:class_frontend/Views/common_Widgets/displayCard.dart';
+import 'package:class_frontend/Views/common_Widgets/scan_code.dart';
 import 'package:flutter/material.dart';
 
 class ViewLecture extends StatefulWidget {
@@ -31,11 +32,18 @@ class _ViewLectureState extends State<ViewLecture> {
                 time: '4pm',
                 description: 'hello',
                 chapterNo: '10'),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton(onPressed: (){
-                    Navigator.pushNamed(context, '/teacher/takeattendence');
-                  }, child: Text('Take attendence')))
+            SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) => const ScanCode(),
+                        ),
+                      );
+                    },
+                    child: Text('Take attendence')))
           ],
         ),
       ),
