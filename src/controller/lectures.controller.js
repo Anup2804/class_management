@@ -8,13 +8,13 @@ import { students } from "../model/students.model.js";
 import { formatDateToLocalISO } from "../utils/function/date.js";
 
 const addLectureNotice = asyncHandler(async (req, res) => {
-  const { standard, lectureName, time, description, board, teacherName, date } =
+  const { standard, lectureName, startTime,endTime, description, board, teacherName, date } =
     req.body;
 
-  if (!standard && !lectureName && !time && !board && !teacherName && !date) {
+  if (!standard && !lectureName && !startTime && !endTime && !board && !teacherName && !date) {
     throw new apiError(
       402,
-      "standard and lectureName and time and date and board is required."
+      "standard and lectureName and start and end time and date and board is required."
     );
   }
 
@@ -50,7 +50,8 @@ const addLectureNotice = asyncHandler(async (req, res) => {
     byTeacher: getTeacher._id,
     standard,
     lectureName,
-    time,
+    startTime,
+    endTime,
     description,
     date: formattedDate,
     board: board.trim().toUpperCase(),
@@ -90,7 +91,8 @@ const addLectureNotice = asyncHandler(async (req, res) => {
           _id: "$teacherDetails._id",
           name: "$teacherDetails.fullName",
         },
-        time: 1,
+        startTime:1,
+        endTime:1,
         description: 1,
         date: 1,
         board: 1,
@@ -171,7 +173,8 @@ const studentLecture = asyncHandler(async (req, res) => {
           _id: "$teacherDetails._id",
           name: "$teacherDetails.fullName",
         },
-        time: 1,
+        startTime:1,
+        endTime:1,
         description: 1,
         board: 1,
         date: 1,
@@ -236,7 +239,8 @@ const teacherLecture = asyncHandler(async (req, res) => {
           _id: "$teacherDetails._id",
           name: "$teacherDetails.fullName",
         },
-        time: 1,
+        startTime:1,
+        endTime:1,
         description: 1,
         board: 1,
         adminName: 1,
@@ -304,7 +308,8 @@ const standardLecture = asyncHandler(async (req, res) => {
           _id: "$teacherDetails._id",
           name: "$teacherDetails.fullName",
         },
-        time: 1,
+        startTime:1,
+        endTime:1,
         date: 1,
         description: 1,
       },
@@ -322,10 +327,10 @@ const standardLecture = asyncHandler(async (req, res) => {
 
 const updateLecture = asyncHandler(async (req, res) => {
   const { lectureId } = req.params;
-  const { standard, time } = req.body;
+  const { standard, startTime,endTime } = req.body;
 
-  if (!standard && !time && !lectureId) {
-    throw new apiError(402, "all inut are required.");
+  if (!standard && !startTime && !endTime && !lectureId) {
+    throw new apiError(402, "all input are required.");
   }
 
   const getlecture = await lectures.findOne({
@@ -341,7 +346,9 @@ const updateLecture = asyncHandler(async (req, res) => {
     lectureId,
     {
       standard: standard,
-      time: time,
+      startTime:startTime,
+      endTime:endTime,
+
       
     },
     { new: true }

@@ -52,7 +52,7 @@ const uploadMarks = asyncHandler(async (req, res) => {
     file: uploadFile.url,
     standard,
     description,
-    board:board.toUpperCase(),
+    board: board.toUpperCase(),
     adminEmail: req.teacher.adminEmail,
   });
 
@@ -166,26 +166,24 @@ const getMarks = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, getMark, "marks fetched "));
 });
 
-const delMarks = asyncHandler(async(req,res)=>{
-  const {MarksId} = req.params;
+const delMarks = asyncHandler(async (req, res) => {
+  const { MarksId } = req.params;
 
-  if(!req.admin){
-    throw new apiError(402,'invalid token')
+  if (!req.admin) {
+    throw new apiError(402, "invalid token");
   }
 
-  const findMarks = await marks.findOneAndDelete(
-    {_id:MarksId,
-      adminEmail:req.admin.email.toString()
-    });
+  const findMarks = await marks.findOneAndDelete({
+    _id: MarksId,
+    adminEmail: req.admin.email.toString(),
+  });
 
-  if(!findMarks){
-    throw new apiError(500,'no data found')
+  if (!findMarks) {
+    throw new apiError(500, "no data found");
   }
 
-  return res.status(200).json(new apiResponse(200,'data deleted.'))
-
-  
-})
+  return res.status(200).json(new apiResponse(200, "data deleted."));
+});
 
 const getAllMarks = asyncHandler(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
@@ -200,4 +198,4 @@ const getAllMarks = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, getmarks, "data found."));
 });
 
-export { uploadMarks, getMarks,getAllMarks,delMarks };
+export { uploadMarks, getMarks, getAllMarks, delMarks };

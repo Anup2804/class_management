@@ -25,7 +25,11 @@ const lectureSchema = new mongoose.Schema(
       required: true,
       default:"Everyday"
     },
-    time: {
+    startTime: {
+      type: String,
+      required: true,
+    },
+    endTime: {
       type: String,
       required: true,
     },
